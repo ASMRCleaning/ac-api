@@ -14,7 +14,9 @@ const { authenticate } = require('../authorization/jwt');
 /**
  * Expose all of our API routes on /v1/* to include an API version.
  */
-router.use(`/v1`, authenticate(), require('./api'));
+
+// Sample customer route
+router.use(`/customer`, authenticate(), require('./api'));
 
 /**
  * Define a simple health check route. If the server is running

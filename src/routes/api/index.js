@@ -8,8 +8,8 @@ const express = require('express');
 // Create a router on which to mount our API endpoints
 const router = express.Router();
 
-// Define our first route, which will be: GET /v1/test
-router.get('/test', require('./get'));
+// Sample a
+router.get('/info', require('./get'));
 
 // Other routes will go here later on...
 
