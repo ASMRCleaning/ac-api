@@ -18,7 +18,8 @@ module.exports.strategy = () => new JwtStrategy(jwtOptions, (jwt_payload, next) 
     // that matches the request payload data
     next(null, {
       _id: jwt_payload._id,
-      userName: jwt_payload.userName,
+      username: jwt_payload.username,
+      role: jwt_payload.role
     });
   } else {
     next(null, false);
