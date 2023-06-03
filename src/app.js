@@ -29,12 +29,17 @@ app.use(helmet());
 // Use CORS middleware so we can make requests across origins
 app.use(cors());
 
+// Use Express JSON middleware to parse incoming JSON bodies
+app.use(express.json());
+
 // Use gzip/deflate compression middleware
 app.use(compression());
 
 // Setup up our passport authentication middleware
 passport.use(authenticate.strategy());
 app.use(passport.initialize());
+
+// Define global
 
 // Define routes
 app.use('/', require('./routes'));

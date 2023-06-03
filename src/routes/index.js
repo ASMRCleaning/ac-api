@@ -10,7 +10,6 @@ const { createSuccessResponse } = require('../response');
 
 // Create a router that we can use to mount our API
 const router = express.Router();
-const loginRouter = express.Router();
 
 // Get the server hostname
 const { hostname } = require('os');
@@ -29,7 +28,7 @@ router.use('/login', require('./api/login'));
 router.use('/register', require('./api/register'));
 
 // Sample customer route
-router.use('/customer', require('./api/customer'));
+router.use('/customer', authenticate(),require('./api/customer'));
 
 /**
  * Define a simple health check route. If the server is running
