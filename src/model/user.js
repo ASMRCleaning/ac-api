@@ -2,7 +2,7 @@ const logger = require('../logger');
 
 const bcrypt = require('bcrypt');
 
-const { createUser } = require('./data');
+const { createUser, validateUser } = require('./data');
 
 const checkValue = (value, key) => {
   if (value) {
@@ -33,20 +33,29 @@ class User {
     }
   }
 
-  async initialize() {
-
+  /**
+   * 
+   * @param {string} username 
+   * @param {string} password 
+   * @returns {string}
+   */
+  static async validate(username, password) {
+    if (username && password) {
+      return await validateUser(username, password);
+    } else {
+      throw new Error('Missing username or password');
+    }
   }
 
   /**
    * 
    * @param {string} username 
-   * @returns Promise<User>
    */
-  static async byUsername(username) {
+  static byUsername(username) {
     return username;
   }
 
-  static async byRole(role) {
+  static byRole(role) {
     return role
   }
 
