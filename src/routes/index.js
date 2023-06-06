@@ -2,11 +2,17 @@
 
 const express = require('express');
 
-// version and author from package.json
+// Version and author from package.json
 const { version, author } = require('../../package.json');
+
+// Use response template for sending response bodies
+const { createSuccessResponse } = require('../response');
 
 // Create a router that we can use to mount our API
 const router = express.Router();
+
+// Get the server hostname
+const { hostname } = require('os');
 
 // Authentication middleware
 const { authenticate } = require('../authorization/jwt');
@@ -15,8 +21,14 @@ const { authenticate } = require('../authorization/jwt');
  * Expose all of our API routes on /v1/* to include an API version.
  */
 
+// Login route
+router.use('/login', require('./api/login'));
+
+// Register route
+router.use('/register', require('./api/register'));
+
 // Sample customer route
-router.use(`/customer`, authenticate(), require('./api'));
+router.use('/customer', authenticate(),require('./api/customer'));
 
 /**
  * Define a simple health check route. If the server is running
@@ -28,12 +40,14 @@ router.get('/', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache');
 
   // Send a 200 'OK' response with info about our repo
-  res.status(200).json({
-    status: 'ok',
-    author,
-    githubUrl: 'https://github.com/ASMRCleaning/ac-api',
-    version,
-  });
+  res.status(200).json(
+    createSuccessResponse({
+      author,
+      githubUrl: 'https://github.com/mightycorn/fragments',
+      version,
+      hostname: hostname()
+    })
+  );
 });
 
 module.exports = router;
