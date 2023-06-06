@@ -1,13 +1,17 @@
-const { userDb } = require('./connection');
+const { UserModel, CustomerModel }= require('./connection');
 
-const logger = require('../../logger');
+// const logger = require('../../logger');
 
-async function createUser(user) {
-  logger.info('before create');
-  const model = new userDb(user);
-  model.save();
-  logger.info('after create');
-  return true;
+const createUser = async (user) => {
+  const model = new UserModel(user);
+  await model.save();
+  const newUser = await UserModel.findOne({ username: user.username }).exec();
+  const customer = new CustomerModel({ 
+    userId: newUser._id, 
+    firstName: user.firstName, 
+    lastName: user.lastName
+  });
+  await customer.save();
 }
 
 module.exports.createUser = createUser;

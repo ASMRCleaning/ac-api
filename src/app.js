@@ -39,8 +39,6 @@ app.use(compression());
 passport.use(authenticate.strategy());
 app.use(passport.initialize());
 
-// Define global
-
 // Define routes
 app.use('/', require('./routes'));
 

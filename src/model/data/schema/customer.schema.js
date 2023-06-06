@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose');
 
 const customerSchema = new Schema({
-  userId: Number,
+  userId: Schema.ObjectId,
   firstName: String,
   lastName: String
 });

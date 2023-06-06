@@ -6,7 +6,10 @@ const userSchema = new Schema({
     unique: true
   },
   password: String,
-  role: Number
+  role: {
+    type: String,
+    enum: [ 'customer', 'manager', 'employee' ]
+  }
 });
 
 module.exports = userSchema;
