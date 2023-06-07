@@ -9,6 +9,7 @@ module.exports = async (req, res) => {
   logger.info(token);
 
   return res.status(200).json(createSuccessResponse({
-    message: 'login route'
+    message: 'login route',
+    token: token
   }));
 }
