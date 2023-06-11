@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
-const { UserModel, CustomerModel }= require('./connection');
+const { UserModel, CustomerModel } = require('./connection');
 
 // const logger = require('../../logger');
 

@@ -2,7 +2,8 @@ const logger = require('../logger');
 
 const bcrypt = require('bcrypt');
 
-const { createUser, validateUser } = require('./data');
+const { createUser, validateUser } = require('./data/user');
+const { findByUsername } = require('./data/customer');
 
 const checkValue = (value, key) => {
   if (value) {
@@ -51,8 +52,12 @@ class User {
    * 
    * @param {string} username 
    */
-  static byUsername(username) {
-    return username;
+  static async byUsername(username) {
+    if (username) {
+      return await findByUsername(username);
+    } else {
+      throw new Error('Missing username');
+    }
   }
 
   static byRole(role) {
