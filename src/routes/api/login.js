@@ -2,17 +2,19 @@ const logger = require('../../logger');
 
 const { User } = require('../../model/user');
 
-const { createSuccessResponse } = require('../../response');
+const { createSuccessResponse, createErrorResponse } = require('../../response');
 
 module.exports = async (req, res) => {
-  const token = await User.validate(req.body.username, req.body.password);
-  const customer = await User.byUsername(req.body.username);
-  logger.info(customer);
+  try {
+    const token = await User.validate(req.body.username, req.body.password);
 
-  logger.info('Login successful')
-  return res.status(200).json(createSuccessResponse({
-    firstName: customer.firstName,
-    lastName: customer.lastName,
-    token: token
-  }));
+    logger.info('Login successful')
+    return res.status(200).json(createSuccessResponse({
+      token: token
+    }));
+  } catch (err) {
+    logger.warn({ err }, 'POST /login error:' + err.message);
+    return res.status(404).json(
+      createErrorResponse(404, err.message));
+  }
 }
