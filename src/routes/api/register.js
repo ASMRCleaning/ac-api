@@ -7,14 +7,14 @@ const { User } = require('../../model/user');
 module.exports = async (req, res) => {
   try {
     const user = new User(req.body);
-
     user.register();
+    
     return res.status(200).json(createSuccessResponse({
       message: 'User created'
     }));
   } catch (err) {
-    logger.error({ err }, 'POST /register error: something went wrong');
+    logger.error({ err }, 'POST /register error: ' + err.message);
     return res.status(500).json(
-      createErrorResponse(500, 'POST /register error: something went wrong'));
+      createErrorResponse(500, 'POST /register error: ' + err.message));
   }
 }

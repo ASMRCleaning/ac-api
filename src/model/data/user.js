@@ -8,7 +8,7 @@ const { UserModel, CustomerModel } = require('./connection');
 const createUser = async (user) => {
   const newUser = new UserModel(user);
   await newUser.save();
-  const document = await UserModel.findOne({ username: user.username }).exec();
+  const document = await UserModel.findOne({ username: user.username }).lean();
   const customer = new CustomerModel({ 
     userId: document._id, 
     firstName: user.firstName, 
@@ -18,7 +18,7 @@ const createUser = async (user) => {
 }
 
 const validateUser = async (username, password) => {
-  const document = await UserModel.findOne({ username: username }).exec();
+  const document = await UserModel.findOne({ username: username }).lean();
 
   if (document) {
     const match = await bcrypt.compare(password, document.password)
