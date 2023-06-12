@@ -1,10 +1,10 @@
-// src/routes/api/get.js
+// src/routes/api/residence/get.js
 
-/**
- * Get a list of fragments for the current user
- */
-module.exports = (req, res) => {
-  // TODO: this is just a placeholder to get something working...
+const logger = require('../../../logger');
+
+const { Residence } = require('../../../model/residence');
+
+module.exports = async (req, res) => {
   return res.status(200).json({
     status: 'ok'
   });

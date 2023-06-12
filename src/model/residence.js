@@ -1,5 +1,7 @@
 const logger = require('../logger');
 
+const { writeResidence } = require('../model/data/residence');
+
 const checkValue = (value, key) => {
   if (value) {
     return value;
@@ -34,7 +36,7 @@ class Residence {
   }
 
   add() {
-    return addResidence(this);
+    return writeResidence(this);
   }
 }
 

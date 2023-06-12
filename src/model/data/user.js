@@ -30,9 +30,17 @@ const validateUser = async (username, password) => {
       const match = await bcrypt.compare(password, document.password)
   
       if (match) {
-        const payload = {
+        let payload = {
+          userId: document._id,
           username: document.username,
           role: document.role
+        }
+
+        // TODO: get the the appropriate ID if the user is a manager/regular employee
+        if (document.role === 'customer') {
+          const customer = await CustomerModel.findOne({ userId: document._id });
+          logger.info(customer);
+          payload['customerId'] = customer._id;
         }
         
         return jwt.sign(payload, process.env.JWT_SECRET);

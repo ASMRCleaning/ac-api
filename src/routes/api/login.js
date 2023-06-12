@@ -21,6 +21,6 @@ module.exports = async (req, res) => {
   } catch (err) {
     logger.warn({ err }, 'POST /login error: ' + err.message);
     return res.status(500).json(
-      createErrorResponse(404, err.message));
+      createErrorResponse(500, err.message));
   }
 }

@@ -2,7 +2,7 @@ const { Schema } = require('mongoose');
 
 const residenceSchema = new Schema({
   customerId: {
-    type: Schema.ObjectId,
+    type: Schema.Types.ObjectId,
     required: true 
   },
   houseType: {

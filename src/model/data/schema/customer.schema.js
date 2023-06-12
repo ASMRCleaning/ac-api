@@ -2,7 +2,7 @@ const { Schema } = require('mongoose');
 
 const customerSchema = new Schema({
   userId: {
-    type: Schema.ObjectId,
+    type: Schema.Types.ObjectId,
     required: true 
   },
   firstName: {
