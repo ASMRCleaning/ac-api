@@ -18,10 +18,11 @@ class User {
   constructor({ ...data }) {
     try {
       this.username = checkValue(data.username, 'username');
-      this.firstName = checkValue(data.firstName, 'firstName');
-      this.lastName = checkValue(data.lastName, 'lastName');
+      this.firstName = checkValue(data.firstName, 'first name');
+      this.lastName = checkValue(data.lastName, 'last name');
       this.role = checkValue(data.role, 'role');
     } catch (err) {
+      logger.warn("User Class error: missing required value");
       throw new Error(err.message);
     }
 
@@ -30,6 +31,7 @@ class User {
       // See: https://www.npmjs.com/package/bcryptjs#hashsyncs-salt
       this.password = bcrypt.hashSync(data.password, 10);
     } else {
+      logger.warn("User Class error [constructor]: passwords do not match");
       throw new Error('Passwords do not match')
     }
   }
@@ -44,6 +46,7 @@ class User {
     if (username && password) {
       return await validateUser(username, password);
     } else {
+      logger.warn("User Class error [validate]: missing username or password");
       throw new Error('Missing username or password');
     }
   }
@@ -56,12 +59,14 @@ class User {
     if (username) {
       return await findByUsername(username);
     } else {
+      logger.warn("User Class error [byUsername]: missing username");
       throw new Error('Missing username');
     }
   }
 
   static byRole(role) {
-    return role
+    // TODO: create query to return user with a specified role
+    return role;
   }
 
   register() {
