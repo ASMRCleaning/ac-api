@@ -9,26 +9,26 @@ const checkValue = (value, key) => {
   if (value) {
     return value;
   } else {
-    logger.warn(`User Class: a ${ key } is required to create a user`);
-    throw new Error(`User Class: a ${ key } is required to create a user`);
+    logger.warn(`User Class error: a ${ key } is required to create a user`);
+    throw new Error(`a ${ key } is required to create a user`);
   }
 }
 
 class User {
-  constructor({ username, firstName, lastName, password, password2, role }) {
+  constructor({ ...data }) {
     try {
-      this.username = checkValue(username, 'username');
-      this.firstName = checkValue(firstName, 'firstName');
-      this.lastName = checkValue(lastName, 'lastName');
-      this.role = checkValue(role, 'role');
+      this.username = checkValue(data.username, 'username');
+      this.firstName = checkValue(data.firstName, 'firstName');
+      this.lastName = checkValue(data.lastName, 'lastName');
+      this.role = checkValue(data.role, 'role');
     } catch (err) {
-      throw new Error(err);
+      throw new Error(err.message);
     }
 
-    if (password === password2) {
+    if (data.password === data.password2) {
       // Generate a hash synchronously using hashSync
       // See: https://www.npmjs.com/package/bcryptjs#hashsyncs-salt
-      this.password = bcrypt.hashSync(password, 10);
+      this.password = bcrypt.hashSync(data.password, 10);
     } else {
       throw new Error('Passwords do not match')
     }
@@ -65,7 +65,7 @@ class User {
   }
 
   register() {
-    return createUser(this);
+    return createUser(this); 
   }
 }
 
