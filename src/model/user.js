@@ -16,6 +16,8 @@ const checkValue = (value, key) => {
 
 class User {
   constructor({ ...data }) {
+    this._id = data._id;
+
     try {
       this.username = checkValue(data.username, 'username');
       this.firstName = checkValue(data.firstName, 'first name');
@@ -70,7 +72,7 @@ class User {
   }
 
   register() {
-    return createUser(this); 
+    return createUser(this);
   }
 }
 

@@ -5,15 +5,15 @@ const logger = require('../../logger');
 
 const { UserModel, CustomerModel } = require('./connection');
 
-const createUser = async (user) => {
+const createUser = async (data) => {
   try {
-    const newUser = new UserModel(user);
+    const newUser = new UserModel(data);
     await newUser.save();
-    const document = await UserModel.findOne({ username: user.username }).lean();
+    const document = await UserModel.findOne({ username: data.username }).lean();
     const customer = new CustomerModel({ 
       userId: document._id, 
-      firstName: user.firstName, 
-      lastName: user.lastName
+      firstName: data.firstName, 
+      lastName: data.lastName
     });
     await customer.save();
   } catch (err) {
@@ -23,21 +23,26 @@ const createUser = async (user) => {
 }
 
 const validateUser = async (username, password) => {
-  const document = await UserModel.findOne({ username: username }).lean();
+  try {
+    const document = await UserModel.findOne({ username: username }).lean();
 
-  if (document) {
-    const match = await bcrypt.compare(password, document.password)
-
-    if (match) {
-      const payload = {
-        username: document.username,
-        role: document.role
+    if (document) {
+      const match = await bcrypt.compare(password, document.password)
+  
+      if (match) {
+        const payload = {
+          username: document.username,
+          role: document.role
+        }
+        
+        return jwt.sign(payload, process.env.JWT_SECRET);
       }
-      
-      return jwt.sign(payload, process.env.JWT_SECRET);
+    } else {
+      return document;
     }
-  } else {
-    return document;
+  } catch (err) {
+    logger.warn({ err }, "validateUser Error: ", err.message);
+    throw new Error(err.message);
   }
 }
 
