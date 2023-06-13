@@ -1,4 +1,5 @@
 const logger = require('../logger');
+const validate = require('./validate-value');
 
 const { Types } = require('mongoose');
 
@@ -9,36 +10,22 @@ const {
   deleteResidence,
 } = require('../model/data/residence');
 
-const checkValue = (value, key) => {
-  if (typeof(value) === 'boolean') {
-    return value;
-  }
-
-  if (value) {
-    return value;
-  }
-  else {
-    logger.warn(`User Class: a(n) "${ key }" value is required to create a residence`);
-    throw new Error(`a(n) "${ key }" value is required to create a residence`);
-  }
-}
-
 class Residence {
   constructor({ ...data }) {
     // We do not need to check for ID
     this._id = new Types.ObjectId(data._id);
  
     try {
-      this.customerId = new Types.ObjectId(checkValue(data.customerId, 'customerId'));
-      this.houseType = checkValue(data.houseType, 'house type');
-      this.size = checkValue(data.size, 'size');
-      this.empty = checkValue(data.empty, 'empty');
-      this.furnished = checkValue(data.furnished, 'furnished');
-      this.pet = checkValue(data.pet, 'pet');
-      this.bedroom = checkValue(data.bedroom, 'bedroom');
-      this.bathroom = checkValue(data.bathroom, 'bathroom');
-      this.den = checkValue(data.den, 'den');
-      this.frequency = checkValue(data.frequency, 'frequency');
+      this.customerId = new Types.ObjectId(validate(data.customerId, 'customerId'));
+      this.houseType = validate(data.houseType, 'house type');
+      this.size = validate(data.size, 'size');
+      this.empty = validate(data.empty, 'empty');
+      this.furnished = validate(data.furnished, 'furnished');
+      this.pet = validate(data.pet, 'pet');
+      this.bedroom = validate(data.bedroom, 'bedroom');
+      this.bathroom = validate(data.bathroom, 'bathroom');
+      this.den = validate(data.den, 'den');
+      this.frequency = validate(data.frequency, 'frequency');
       this.address = {
         streetAddress: data.address.streetAddress,
         unit: data.address.unit,

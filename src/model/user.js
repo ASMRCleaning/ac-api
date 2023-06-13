@@ -1,28 +1,23 @@
-const logger = require('../logger');
-
 const bcrypt = require('bcrypt');
 
-const { createUser, validateUser } = require('./data/user');
-const { findByUsername } = require('./data/customer');
+const logger = require('../logger');
+const validate = require('./validate-value');
 
-const checkValue = (value, key) => {
-  if (value) {
-    return value;
-  } else {
-    logger.warn(`User Class error: a ${ key } is required to create a user`);
-    throw new Error(`a ${ key } is required to create a user`);
-  }
-}
+const { 
+  createUser, 
+  validateUser, 
+  findByUsername 
+} = require('./data/user');
 
 class User {
   constructor({ ...data }) {
     this._id = data._id;
 
     try {
-      this.username = checkValue(data.username, 'username');
-      this.firstName = checkValue(data.firstName, 'first name');
-      this.lastName = checkValue(data.lastName, 'last name');
-      this.role = checkValue(data.role, 'role');
+      this.username = validate(data.username, 'username');
+      this.firstName = validate(data.firstName, 'first name');
+      this.lastName = validate(data.lastName, 'last name');
+      this.role = validate(data.role, 'role');
     } catch (err) {
       logger.warn("User Class error: missing required value");
       throw new Error(err.message);
