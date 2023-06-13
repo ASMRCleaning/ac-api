@@ -1,4 +1,4 @@
-// src/routes/api/customer/index.js
+// src/routes/api/residence/index.js
 
 const express = require('express');
 
@@ -7,8 +7,5 @@ const router = express.Router();
 
 // GET /customer
 router.get('/', require('./get'));
-
-// GET /customer/:username
-router.get('/:username', require('./get-info'));
 
 module.exports = router;
