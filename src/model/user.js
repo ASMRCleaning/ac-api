@@ -1,34 +1,34 @@
-const logger = require('../logger');
-
 const bcrypt = require('bcrypt');
 
-const { createUser, validateUser } = require('./data');
+const logger = require('../logger');
+const validate = require('./validate-value');
 
-const checkValue = (value, key) => {
-  if (value) {
-    return value;
-  } else {
-    logger.warn(`User Class: a ${ key } is required to create a user`);
-    throw new Error(`User Class: a ${ key } is required to create a user`);
-  }
-}
+const { 
+  createUser, 
+  validateUser, 
+  findByUsername 
+} = require('./data/user');
 
 class User {
-  constructor({ username, firstName, lastName, password, password2, role }) {
+  constructor({ ...data }) {
+    this._id = data._id;
+
     try {
-      this.username = checkValue(username, 'username');
-      this.firstName = checkValue(firstName, 'firstName');
-      this.lastName = checkValue(lastName, 'lastName');
-      this.role = checkValue(role, 'role');
+      this.username = validate(data.username, 'username');
+      this.firstName = validate(data.firstName, 'first name');
+      this.lastName = validate(data.lastName, 'last name');
+      this.role = validate(data.role, 'role');
     } catch (err) {
-      throw new Error(err);
+      logger.warn("User Class error: missing required value");
+      throw new Error(err.message);
     }
 
-    if (password === password2) {
+    if (data.password === data.password2) {
       // Generate a hash synchronously using hashSync
       // See: https://www.npmjs.com/package/bcryptjs#hashsyncs-salt
-      this.password = bcrypt.hashSync(password, 10);
+      this.password = bcrypt.hashSync(data.password, 10);
     } else {
+      logger.warn("User Class error [constructor]: passwords do not match");
       throw new Error('Passwords do not match')
     }
   }
@@ -43,6 +43,7 @@ class User {
     if (username && password) {
       return await validateUser(username, password);
     } else {
+      logger.warn("User Class error [validate]: missing username or password");
       throw new Error('Missing username or password');
     }
   }
@@ -51,12 +52,18 @@ class User {
    * 
    * @param {string} username 
    */
-  static byUsername(username) {
-    return username;
+  static async byUsername(username) {
+    if (username) {
+      return await findByUsername(username);
+    } else {
+      logger.warn("User Class error [byUsername]: missing username");
+      throw new Error('Missing username');
+    }
   }
 
   static byRole(role) {
-    return role
+    // TODO: create query to return user with a specified role
+    return role;
   }
 
   register() {

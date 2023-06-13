@@ -27,8 +27,11 @@ router.use('/login', require('./api/login'));
 // Register route
 router.use('/register', require('./api/register'));
 
-// Sample customer route
+// Customer route
 router.use('/customer', authenticate(), require('./api/customer'));
+
+// Residence route
+router.use('/residence', authenticate(), require('./api/residence'));
 
 /**
  * Define a simple health check route. If the server is running
