@@ -7,6 +7,8 @@ const { UserModel, CustomerModel } = require('./connection');
 
 const createUser = async (data) => {
   try {
+    // Prevent passing _id for MongoDB to automatically create it
+    delete data['_id'];
     const newUser = new UserModel(data);
     await newUser.save();
     const document = await UserModel.findOne({ username: data.username }).lean();
@@ -54,5 +56,17 @@ const validateUser = async (username, password) => {
   }
 }
 
+const findByUsername = async (username) => {
+  const user = await UserModel.findOne({ username: username }).lean();
+
+  if (user) {
+    const customer = await CustomerModel.findOne({ userId: user._id }).lean();
+    return customer;
+  }
+
+  return user;
+}
+
 module.exports.createUser = createUser;
 module.exports.validateUser = validateUser;
+module.exports.findByUsername = findByUsername;
