@@ -1,41 +1,59 @@
 const logger = require('../../logger');
 
+const { Types } = require('mongoose');
+
 const { ResidenceModel } = require('./connection');
 
-const addResidence = async (residence) => {
+// const writeResidence = async (data) => {
+//   try {
+//     if (data._id) {
+//       const { _id, ...details } = data;
+//       await ResidenceModel.findByIdAndUpdate(_id , details);
+//     } else {
+//       const residence = new ResidenceModel(data);
+//       await residence.save();
+//     }
+//   } catch (err) {
+//     logger.warn({ err }, "writeResidence error: " + err.message);
+//     throw new Error(err.message);
+//   }
+// }
+
+const addResidence = async (data) => {
   try {
-    const document = new ResidenceModel(residence);
-    await document.save();
+    const residence = new ResidenceModel(data);
+    await residence.save();
   } catch (err) {
     logger.warn({ err }, "addResidence error: " + err.message);
     throw new Error(err.message);
   }
 }
 
-const updateResidence = async (residence) => {
+const updateResidence = async (data) => {
   try {
-    const { _id, ...data }  = residence;
-    await ResidenceModel.findByIdAndUpdate(_id, { ...data });
+    const { _id, ...details } = data;
+    await ResidenceModel.findByIdAndUpdate(_id , details);
   } catch (err) {
     logger.warn({ err }, "updateResidence error: " + err.message);
     throw new Error(err.message);
   }
 }
 
-const writeResidence = async (data) => {
+const readResidence = async (customerId, id) => {
   try {
-    const { _id, ...residence } = data;
-    await ResidenceModel.findByIdAndUpdate(_id, residence, { upsert: true });
+    return await ResidenceModel.findOne({ 
+      _id: new Types.ObjectId(id), 
+      customerId: new Types.ObjectId(customerId) }).lean();
   } catch (err) {
-    logger.warn({ err }, "writeResidence error: " + err.message);
+    logger.warn({ err }, "readResidence error: " + err.message);
     throw new Error(err.message);
   }
 }
 
 const deleteResidence = async (residence) => {
   try {
-    const { _id, ...data } = residence;
-    await ResidenceModel.findByIdAndDelete(_id, { ...data });
+    const { _id } = residence;
+    await ResidenceModel.findByIdAndDelete(_id);
   } catch (err) {
     logger.warn({ err }, "deleteResidence error: " + err.message);
     throw new Error(err.message);
@@ -44,5 +62,5 @@ const deleteResidence = async (residence) => {
 
 module.exports.addResidence = addResidence;
 module.exports.updateResidence = updateResidence;
-module.exports.writeResidence = writeResidence;
+module.exports.readResidence = readResidence;
 module.exports.deleteResidence = deleteResidence;

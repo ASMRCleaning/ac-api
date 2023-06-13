@@ -15,15 +15,15 @@ const residenceSchema = new Schema({
     required: true 
   },
   empty: {
-    type: Number,
+    type: Boolean,
     required: true 
   },
   furnished: {
-    type: Number,
+    type: Boolean,
     required: true 
   },
   pet: {
-    type: Number,
+    type: Boolean,
     required: true 
   },
   bedroom: {
@@ -43,7 +43,14 @@ const residenceSchema = new Schema({
     enum: [ 'once', 'weekly', 'bi-weekly', 'monthly' ],
     required: true
   },
-  address: String
+  address: new Schema({
+    streetAddress: String,
+    unit: String,
+    postalCode: String,
+    city: String,
+    province: String,
+    country: String
+  }, { _id: false })
 });
 
 module.exports = residenceSchema;
