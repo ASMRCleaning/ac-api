@@ -6,6 +6,8 @@ const { ResidenceModel } = require('./connection');
 
 const addResidence = async (data) => {
   try {
+    // Prevent assigning of _id for MongoDB to automatically create it
+    delete data['_id'];
     const residence = new ResidenceModel(data);
     await residence.save();
   } catch (err) {
