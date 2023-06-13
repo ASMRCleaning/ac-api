@@ -5,7 +5,7 @@ const { Types } = require('mongoose');
 const { 
   addResidence,
   updateResidence, 
-  readResidence,
+  findResidenceById,
   deleteResidence,
 } = require('../model/data/residence');
 
@@ -65,8 +65,8 @@ class Residence {
     return deleteResidence(this._id);
   }
 
-  static async byId(customerId, id) {
-    const data = await readResidence(customerId, id);
+  static async byId(id) {
+    const data = await findResidenceById(id);
 
     if (!data) {
       logger.warn("Residence class error [byId]: residence with customerId and _id not found");
