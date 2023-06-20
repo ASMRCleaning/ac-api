@@ -9,10 +9,10 @@ const checkValue = (value, key) => {
   if (value) {
     return value;
   } else {
-    logger.warn(`User Class: a ${ key } is required to create a user`);
-    throw new Error(`User Class: a ${ key } is required to create a user`);
+    logger.warn(`User Class: a ${key} is required to create a user`);
+    throw new Error(`User Class: a ${key} is required to create a user`);
   }
-}
+};
 
 class User {
   constructor({ username, firstName, lastName, password, password2, role }) {
@@ -30,14 +30,14 @@ class User {
       // See: https://www.npmjs.com/package/bcryptjs#hashsyncs-salt
       this.password = bcrypt.hashSync(password, 10);
     } else {
-      throw new Error('Passwords do not match')
+      throw new Error('Passwords do not match');
     }
   }
 
   /**
-   * 
-   * @param {string} username 
-   * @param {string} password 
+   *
+   * @param {string} username
+   * @param {string} password
    * @returns {string}
    */
   static async validate(username, password) {
@@ -49,8 +49,8 @@ class User {
   }
 
   /**
-   * 
-   * @param {string} username 
+   *
+   * @param {string} username
    */
   static async byUsername(username) {
     if (username) {
@@ -61,11 +61,11 @@ class User {
   }
 
   static byRole(role) {
-    return role
+    return role;
   }
 
   register() {
-    return createUser(this);
+    return createUser(this, this.role);
   }
 }
 
