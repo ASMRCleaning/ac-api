@@ -3,9 +3,10 @@ const validate = require('./validate-value');
 
 const { Types } = require('mongoose');
 
-const { 
+const {
+  getAllResidences,
   addResidence,
-  updateResidence, 
+  updateResidence,
   findResidenceById,
   deleteResidence,
 } = require('../model/data/residence');
@@ -14,7 +15,7 @@ class Residence {
   constructor({ ...data }) {
     // We do not need to check for ID
     this._id = new Types.ObjectId(data._id);
- 
+
     try {
       this.customerId = new Types.ObjectId(validate(data.customerId, 'customerId'));
       this.houseType = validate(data.houseType, 'house type');
@@ -29,15 +30,19 @@ class Residence {
       this.address = {
         streetAddress: data.address.streetAddress,
         unit: data.address.unit,
-        postalCode : data.address.postalCode,
+        postalCode: data.address.postalCode,
         city: data.address.city,
         province: data.address.province,
-        country: data.address.country
-      }
+        country: data.address.country,
+      };
     } catch (err) {
-      logger.warn("Residence class error [constructor]: missing required value");
+      logger.warn('Residence class error [constructor]: missing required value');
       throw new Error(err.message);
     }
+  }
+
+  static async getAll() {
+    return getAllResidences();
   }
 
   add() {
@@ -56,7 +61,7 @@ class Residence {
     const data = await findResidenceById(id);
 
     if (!data) {
-      logger.warn("Residence class error [byId]: residence with customerId and _id not found");
+      logger.warn('Residence class error [byId]: residence with customerId and _id not found');
       throw new Error('residence with customerId and _id not found');
     }
 

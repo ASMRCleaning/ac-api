@@ -1,11 +1,9 @@
-// src/routes/api/residence/index.js
-
 const express = require('express');
 
-// Create a router on which to mount our customer specific API endpoints
+// Create a router on which to mount our residence specific API endpoints
 const router = express.Router();
 
-// GET /customer
+// GET /residence
 router.get('/', require('./get'));
 
 module.exports = router;
