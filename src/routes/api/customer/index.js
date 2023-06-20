@@ -14,4 +14,6 @@ router.get('/:username', require('./get-info'));
 // PUT /customer/:id
 router.put('/:id', require('./put'));
 
+router.use('/residence', require('./residence'));
+
 module.exports = router;
