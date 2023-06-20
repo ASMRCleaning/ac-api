@@ -6,4 +6,7 @@ const router = express.Router();
 // GET /residence
 router.get('/', require('./get'));
 
+// POST /residence
+router.post('/', require('./post'));
+
 module.exports = router;
