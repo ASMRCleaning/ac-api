@@ -9,20 +9,20 @@ const addCustomer = async (data) => {
     const customer = new CustomerModel(data);
     await customer.save();
   } catch (err) {
-    logger.warn({ err }, "addCustomer error: " + err.message);
+    logger.warn({ err }, 'addCustomer error: ' + err.message);
     throw new Error(err.message);
   }
-}
+};
 
 const updateCustomer = async (data) => {
   try {
     const { _id, ...details } = data;
-    await CustomerModel.findByIdAndUpdate(_id , details);
+    await CustomerModel.findByIdAndUpdate(_id, details);
   } catch (err) {
-    logger.warn({ err }, "updateResidence error: " + err.message);
+    logger.warn({ err }, 'updateResidence error: ' + err.message);
     throw new Error(err.message);
   }
-}
+};
 
 module.exports.addCustomer = addCustomer;
 module.exports.updateCustomer = updateCustomer;
