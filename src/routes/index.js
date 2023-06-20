@@ -48,7 +48,7 @@ router.get('/', (req, res) => {
       author,
       githubUrl: 'https://github.com/mightycorn/fragments',
       version,
-      hostname: hostname()
+      hostname: hostname(),
     })
   );
 });
