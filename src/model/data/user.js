@@ -3,39 +3,81 @@ const jwt = require('jsonwebtoken');
 
 const logger = require('../../logger');
 
-// const logger = require('../../logger');
+const { UserModel, CustomerModel, EmployeeModel, ManagerModel } = require('./connection');
 
-const createUser = async (user) => {
-  const newUser = new UserModel(user);
-  await newUser.save();
-  const document = await UserModel.findOne({ username: user.username }).lean();
-  const customer = new CustomerModel({ 
-    userId: document._id, 
-    firstName: user.firstName, 
-    lastName: user.lastName
-  });
-  await customer.save();
-}
+const createUser = async (data, role) => {
+  try {
+    // Prevent passing _id for MongoDB to automatically create it
+    delete data['_id'];
+    const newUser = new UserModel(data);
+    await newUser.save();
+
+    let roleModel;
+
+    switch (role) {
+      case 'employee':
+        roleModel = EmployeeModel;
+        break;
+      case 'manager':
+        roleModel = ManagerModel;
+        break;
+      case 'customer':
+        roleModel = CustomerModel;
+        break;
+    }
+
+    const document = await UserModel.findOne({ username: data.username }).lean();
+    const customer = new roleModel({
+      userId: document._id,
+      firstName: data.firstName,
+      lastName: data.lastName,
+    });
+    await customer.save();
+  } catch (err) {
+    logger.warn({ err }, 'createUser Error: ', err.message);
+    throw new Error(err.message);
+  }
+};
 
 const validateUser = async (username, password) => {
   try {
     const document = await UserModel.findOne({ username: username }).lean();
 
-  if (document) {
-    const match = await bcrypt.compare(password, document.password)
+    if (document) {
+      const match = await bcrypt.compare(password, document.password);
 
-    if (match) {
-      const payload = {
-        username: document.username,
-        role: document.role
+      if (match) {
+        let payload = {
+          userId: document._id,
+          username: document.username,
+          role: document.role,
+        };
+
+        // TODO: get the the appropriate ID if the user is a manager/regular employee
+        if (document.role === 'customer') {
+          const customer = await CustomerModel.findOne({ userId: document._id });
+          logger.info(customer);
+          payload['customerId'] = customer._id;
+        }
+
+        return jwt.sign(payload, process.env.JWT_SECRET);
       }
-      
-      return jwt.sign(payload, process.env.JWT_SECRET);
+    } else {
+      return document;
     }
-  } else {
-    return document;
+  } catch (err) {
+    logger.warn({ err }, 'validateUser Error: ', err.message);
+    throw new Error(err.message);
   }
-}
+};
+
+const findByUsername = async (username) => {
+  const user = await UserModel.findOne({ username: username }).lean();
+
+  if (user) {
+    const customer = await CustomerModel.findOne({ userId: user._id }).lean();
+    return customer;
+  }
 
   return user;
 };
