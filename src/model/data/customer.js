@@ -24,5 +24,15 @@ const updateCustomer = async (data) => {
   }
 };
 
+const findById = async (id) => {
+  try {
+    return await CustomerModel.findById(id);
+  } catch (err) {
+    logger.warn({ err }, 'findById error: ' + err.message);
+    throw new Error(err.message);
+  }
+}
+
 module.exports.addCustomer = addCustomer;
 module.exports.updateCustomer = updateCustomer;
+module.exports.findById = findById;

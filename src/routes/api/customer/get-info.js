@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
     }
   } catch (err) {
     logger.warn({ err }, 'GET /customer/:username error: ' + err.message);
-    return res.status(404).json(
-      createErrorResponse(404, 'GET /customer/:username error: ' + err.message));
+    return res.status(500).json(
+      createErrorResponse(500, 'GET /customer/:username error: ' + err.message));
   }
 };
