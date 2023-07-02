@@ -13,7 +13,7 @@ const { Types } = require('mongoose');
 const { 
   addCustomer, 
   updateCustomer,
-  findById 
+  findCustomerById 
 } = require('./data/customer');
 
 class Customer {
@@ -65,11 +65,12 @@ class Customer {
    * @returns Promise<Customer>
    */
   static async byId(id) {
-    const data = await findById(id);
+    const data = await findCustomerById(id);
 
     // If there is no customer with the id then throw an error
     if (!data) {
-      throw new Error(`Customer Class error: customer with id ${ id } not found`)
+      logger.warn(`Customer Class class error [byId]: customer with id ${ id } not found`);
+      throw new Error(`Customer Class class error [byId]: customer with id ${ id } not found`)
     }
 
     const customer = new Customer({

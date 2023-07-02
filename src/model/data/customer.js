@@ -20,16 +20,16 @@ const updateCustomer = async (data) => {
     // Prevent updating the userId of the document
     delete details['userId'];
     // Return the update document from the database
-    return await CustomerModel.findByIdAndUpdate(_id, details, { returnDocument: 'after' } );
+    return await CustomerModel.findByIdAndUpdate(_id, details, { returnDocument: 'after' } ).lean();
   } catch (err) {
     logger.warn({ err }, 'updateCustomer error: ' + err.message);
     throw new Error(err.message);
   }
 };
 
-const findById = async (id) => {
+const findCustomerById = async (id) => {
   try {
-    return await CustomerModel.findById(id);
+    return await CustomerModel.findById(id).lean();
   } catch (err) {
     logger.warn({ err }, 'findById error: ' + err.message);
     throw new Error(err.message);
@@ -38,4 +38,4 @@ const findById = async (id) => {
 
 module.exports.addCustomer = addCustomer;
 module.exports.updateCustomer = updateCustomer;
-module.exports.findById = findById;
+module.exports.findCustomerById = findCustomerById;

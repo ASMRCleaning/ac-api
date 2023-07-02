@@ -58,9 +58,10 @@ class Residence {
   static async byId(id) {
     const data = await findResidenceById(id);
 
+    // If there is no residence with the id then throw an error
     if (!data) {
-      logger.warn('Residence class error [byId]: residence with customerId and _id not found');
-      throw new Error('residence with customerId and _id not found');
+      logger.warn(`Residence class error [byId]: residence with id ${ id } not found`);
+      throw new Error(`Residence class error [byId]: residence with id ${ id } not found`);
     }
 
     return new Residence(data);
