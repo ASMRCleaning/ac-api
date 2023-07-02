@@ -56,12 +56,21 @@ class Residence {
     return addResidence(this);
   }
 
+  /**
+   * Update the matching residence document in the database with the current
+   * Residence object
+   * @returns Promise<Object>
+   */
   update() {
     return updateResidence(this);
   }
 
-  delete() {
-    return deleteResidence(this._id);
+  /**
+   * Delete the residence data for the given _id and customerId
+   * @returns Promise<Object>
+   */
+  static async delete(id, customerId) {
+    return deleteResidence(id, customerId);
   }
 
   /**

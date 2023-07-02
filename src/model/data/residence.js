@@ -71,17 +71,29 @@ const updateResidence = async (data) => {
  */
 const findResidenceById = async (id, customerId) => {
   try {
-    return await ResidenceModel.findOne({ _id: id, customerId: customerId }).lean();
+    return await ResidenceModel.findOne(
+      { 
+        _id: id, 
+        customerId: customerId 
+      }).lean();
   } catch (err) {
     logger.warn({ err }, 'readResidence error: ' + err.message);
     throw new Error(err.message);
   }
 };
 
-const deleteResidence = async (residence) => {
+/**
+ * Delete the residence from the database with the given id and customerId
+ * @param {string} id _id of the residence document
+ * @param {string} customerId customerId of the residence document
+ * @returns Promise<Object>
+ */
+const deleteResidence = async (id, customerId) => {
   try {
-    const { _id } = residence;
-    await ResidenceModel.findByIdAndDelete(_id);
+    return await ResidenceModel.findOneAndDelete({ 
+      _id: id, 
+      customerId: customerId 
+    }).lean();
   } catch (err) {
     logger.warn({ err }, 'deleteResidence error: ' + err.message);
     throw new Error(err.message);

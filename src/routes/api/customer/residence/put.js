@@ -12,11 +12,14 @@ const { createSuccessResponse, createErrorResponse } = require('../../../../resp
 module.exports = async (req, res) => {
   try {
     const residenceId = req.params.id;
+    const customerId = req.user.customerId;
     const residenceData = req.body;
 
     // Determine whether the residence exists in the database
-    const residence = await Residence.byId(residenceId, req.user.customerId);
+    const residence = await Residence.byId(residenceId, customerId);
 
+    // If a residence with the matching _id and customerId is found
+    // in the database update it with the database
     if (residence) {
       // Set the residence data
       residence.setData(residenceData);
@@ -30,10 +33,10 @@ module.exports = async (req, res) => {
         })
       );
     } else {
-      // Return a 404 response if there is no residence with the 
-      logger.warn(`POST /customer/residence/:id residence with id (${ residenceId }) not found`);
+      // Return a 404 response if there is no residence with the _id and customerId
+      logger.warn('POST /customer/residence/:id error: residence with _id and customerId not found');
       return res.status(404).json(
-        createErrorResponse(404, `POST /customer/residence/:id residence with id (${ residenceId }) not found`));
+        createErrorResponse(404, 'POST /customer/residence/:id error: residence with _id and customerId not found'));
     }
     
   } catch (err) {
