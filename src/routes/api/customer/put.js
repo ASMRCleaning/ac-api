@@ -11,11 +11,12 @@ const { createSuccessResponse, createErrorResponse } = require('../../../respons
 
 module.exports = async (req, res) => {
   try {
+    const userId = req.user.userId;
     const customerId = req.user.customerId;
     const customerData = req.body;
 
     // Determine whether the customer exists
-    const customer = await Customer.byId(customerId);
+    const customer = await Customer.byId(customerId, userId);
 
     if (customer) {
       // Set the customer data. This is limited to first name and last name

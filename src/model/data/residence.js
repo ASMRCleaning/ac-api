@@ -33,10 +33,9 @@ const updateResidence = async (data) => {
   try {
     // Extract the _id and customerId while assigning everything else in "details"
     const { _id, customerId, ...details } = data;
-
     // Create ResidenceModel to validate values before updating in the database
     const residence = new ResidenceModel(data);
-    // Validate synchronously
+    // Validate values synchronously
     const error = residence.validateSync();
 
     // If there are no validation errors, attempt to update the residence in the database

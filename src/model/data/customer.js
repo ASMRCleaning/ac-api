@@ -17,23 +17,38 @@ const addCustomer = async (data) => {
 
 const updateCustomer = async (data) => {
   try {
-    const { _id, ...details } = data;
-    // Prevent updating the userId of the document
-    delete details['userId'];
-    // Return the updated document from the database
-    return await CustomerModel.findByIdAndUpdate(
-      _id, 
-      details,
-      { returnDocument: 'after' }).lean();
+    // Extract the _id and userId while assigning everything else in "details"
+    const { _id, userId, ...details } = data;
+    // Create CustomerModel to validate values before updating in the database
+    const customer = new CustomerModel(data);
+    // Validate values synchronously
+    const error = customer.validateSync();
+
+    // If there are no validation errors, attempt to update the residence in the database
+    if (!error) {
+      return await CustomerModel.findOneAndUpdate(
+        {
+          // Use _id and userId as the filter
+          _id: _id,
+          userId: userId
+        },
+        details,
+        {
+          // return the document after it has been updated
+          returnDocument: 'after'
+        }).lean();
+    }
+
   } catch (err) {
     logger.warn({ err }, 'updateCustomer error: ' + err.message);
     throw new Error(err.message);
   }
 };
 
-const findCustomerById = async (id) => {
+const findCustomerById = async (id, userId) => {
   try {
-    return await CustomerModel.findById(id).lean();
+    // return await CustomerModel.findById(id).lean();
+    return await CustomerModel.findOne({_id: id, userId: userId}).lean();
   } catch (err) {
     logger.warn({ err }, 'findById error: ' + err.message);
     throw new Error(err.message);

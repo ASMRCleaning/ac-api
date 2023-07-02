@@ -49,25 +49,27 @@ class Customer {
   /**
    * Set's the current customer's first name and last name
    * @param {Object} data
-   * @returns void
    */
   setData(data) {
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
+    // Assign the values of the properties if it is passed,
+    // otherwise, assign the previous value
+    this.firstName = data?.firstName ?? this.firstName;
+    this.lastName = data?.lastName ?? this.lastName;
   }
 
   /**
    * Search for a customer by ID in the database
-   * @param {int} id 
+   * @param {string} id customer _id
+   * @param {string} userId user id attached to the customer
    * @returns Promise<Customer>
    */
-  static async byId(id) {
-    const data = await findCustomerById(id);
+  static async byId(id, userId) {
+    const data = await findCustomerById(id, userId);
 
     // If there is no customer with the id then throw an error
     if (!data) {
-      logger.warn(`Customer Class class error [byId]: customer with id ${ id } not found`);
-      throw new Error(`Customer Class class error [byId]: customer with id ${ id } not found`)
+      logger.warn('Customer Class class error [byId]: customer with _id and userId not found');
+      throw new Error(`Customer Class class error [byId]: customer with _id and userId not found`)
     }
 
     const customer = new Customer({
