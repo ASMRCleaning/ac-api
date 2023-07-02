@@ -1,8 +1,6 @@
 const logger = require('../logger');
 const validate = require('./validate-value');
 
-const { Types } = require('mongoose');
-
 const {
   getAllResidences,
   addResidence,
@@ -13,11 +11,11 @@ const {
 
 class Residence {
   constructor({ ...data }) {
-    // We do not need to check for ID
-    this._id = new Types.ObjectId(data._id);
+    // We do not need to check for ID when creating a new instance
+    this._id = data._id;
 
     try {
-      this.customerId = new Types.ObjectId(validate(data.customerId, 'customerId'));
+      this.customerId = validate(data.customerId, 'customerId');
       this.houseType = validate(data.houseType, 'house type');
       this.size = validate(data.size, 'size');
       this.empty = validate(data.empty, 'empty');

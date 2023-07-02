@@ -17,9 +17,12 @@ const addCustomer = async (data) => {
 const updateCustomer = async (data) => {
   try {
     const { _id, ...details } = data;
-    await CustomerModel.findByIdAndUpdate(_id, details);
+    // Prevent updating the userId of the document
+    delete details['userId'];
+    // Return the update document from the database
+    return await CustomerModel.findByIdAndUpdate(_id, details, { returnDocument: 'after' } );
   } catch (err) {
-    logger.warn({ err }, 'updateResidence error: ' + err.message);
+    logger.warn({ err }, 'updateCustomer error: ' + err.message);
     throw new Error(err.message);
   }
 };
