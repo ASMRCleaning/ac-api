@@ -1,42 +1,57 @@
 const bcrypt = require('bcrypt');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 const logger = require('../../logger');
 
-const { UserModel, CustomerModel } = require('./connection');
+const { UserModel, CustomerModel, EmployeeModel, ManagerModel } = require('./connection');
 
-const createUser = async (data) => {
+const createUser = async (data, role) => {
   try {
     // Prevent passing _id for MongoDB to automatically create it
     delete data['_id'];
     const newUser = new UserModel(data);
     await newUser.save();
+
+    let roleModel;
+
+    switch (role) {
+      case 'employee':
+        roleModel = EmployeeModel;
+        break;
+      case 'manager':
+        roleModel = ManagerModel;
+        break;
+      case 'customer':
+        roleModel = CustomerModel;
+        break;
+    }
+
     const document = await UserModel.findOne({ username: data.username }).lean();
-    const customer = new CustomerModel({ 
-      userId: document._id, 
-      firstName: data.firstName, 
-      lastName: data.lastName
+    const customer = new roleModel({
+      userId: document._id,
+      firstName: data.firstName,
+      lastName: data.lastName,
     });
     await customer.save();
   } catch (err) {
-    logger.warn({ err }, "createUser Error: ", err.message);
+    logger.warn({ err }, 'createUser Error: ', err.message);
     throw new Error(err.message);
   }
-}
+};
 
 const validateUser = async (username, password) => {
   try {
     const document = await UserModel.findOne({ username: username }).lean();
 
     if (document) {
-      const match = await bcrypt.compare(password, document.password)
-  
+      const match = await bcrypt.compare(password, document.password);
+
       if (match) {
         let payload = {
           userId: document._id,
           username: document.username,
-          role: document.role
-        }
+          role: document.role,
+        };
 
         // TODO: get the the appropriate ID if the user is a manager/regular employee
         if (document.role === 'customer') {
@@ -44,17 +59,17 @@ const validateUser = async (username, password) => {
           logger.info(customer);
           payload['customerId'] = customer._id;
         }
-        
+
         return jwt.sign(payload, process.env.JWT_SECRET);
       }
     } else {
       return document;
     }
   } catch (err) {
-    logger.warn({ err }, "validateUser Error: ", err.message);
+    logger.warn({ err }, 'validateUser Error: ', err.message);
     throw new Error(err.message);
   }
-}
+};
 
 const findByUsername = async (username) => {
   const user = await UserModel.findOne({ username: username }).lean();
@@ -65,7 +80,7 @@ const findByUsername = async (username) => {
   }
 
   return user;
-}
+};
 
 module.exports.createUser = createUser;
 module.exports.validateUser = validateUser;

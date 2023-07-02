@@ -1,12 +1,16 @@
 {
-    "editor.insertSpaces": true,
-    "editor.tabSize": 2,
-    "editor.detectIndentation": false,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.fixAll": true
-    },
-    "files.eol": "\n",
-    "files.insertFinalNewline": true
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "prettier.prettierPath": "./node_modules/prettier",
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
   }
+}
