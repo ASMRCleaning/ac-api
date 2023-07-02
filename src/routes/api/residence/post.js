@@ -1,11 +1,14 @@
-const logger = require('../../../logger');
 
+const logger = require('../../../logger');
 const { Residence } = require('../../../model/residence');
 const { createSuccessResponse, createErrorResponse } = require('../../../response');
 
 module.exports = async (req, res) => {
   try {
-    const residenceData = req.body;
+    const residenceData = { 
+      customerId: req.user.customerId, 
+      ...req.body 
+    };
 
     // Create a new Residence instance
     const newResidence = new Residence(residenceData);

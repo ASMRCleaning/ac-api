@@ -8,6 +8,7 @@ const addCustomer = async (data) => {
     delete data['_id'];
     const customer = new CustomerModel(data);
     await customer.save();
+    return customer;
   } catch (err) {
     logger.warn({ err }, 'addCustomer error: ' + err.message);
     throw new Error(err.message);
@@ -19,8 +20,11 @@ const updateCustomer = async (data) => {
     const { _id, ...details } = data;
     // Prevent updating the userId of the document
     delete details['userId'];
-    // Return the update document from the database
-    return await CustomerModel.findByIdAndUpdate(_id, details, { returnDocument: 'after' } ).lean();
+    // Return the updated document from the database
+    return await CustomerModel.findByIdAndUpdate(
+      _id, 
+      details,
+      { returnDocument: 'after' }).lean();
   } catch (err) {
     logger.warn({ err }, 'updateCustomer error: ' + err.message);
     throw new Error(err.message);

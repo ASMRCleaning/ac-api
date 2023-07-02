@@ -1,3 +1,5 @@
+// TODO: Determine whether /residence route is still needed
+
 const express = require('express');
 
 // Create a router on which to mount our residence specific API endpoints

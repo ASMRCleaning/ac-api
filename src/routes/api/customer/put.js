@@ -31,9 +31,9 @@ module.exports = async (req, res) => {
       );
     } else {
       // Return a 404 response if there is no customer with the given id
-      logger.warn(`PUT /customer customer with id (${ customerId }) not found`);
+      logger.warn(`PUT /customer error: customer with id (${ customerId }) not found`);
       return res.status(404).json(
-        createErrorResponse(404, `PUT /customer customer with id (${ customerId }) not found`));
+        createErrorResponse(404, `PUT /customer error: customer with id (${ customerId }) not found`));
     }
   } catch (err) {
     // If anything goes wrong return 400 response with the proper message

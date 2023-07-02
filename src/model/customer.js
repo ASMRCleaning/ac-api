@@ -6,10 +6,7 @@ const logger = require('../logger');
 // Validate the passed value
 const validate = require('./validate-value');
 
-// This is used to create a MongoDB ObjectID type
-const { Types } = require('mongoose');
-
-// Query helper functions using Mongoose
+// Query helper functions using Mongoose for CustomerModel
 const { 
   addCustomer, 
   updateCustomer,
