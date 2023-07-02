@@ -30,9 +30,6 @@ router.use('/register', require('./api/register'));
 // Customer route
 router.use('/customer', authenticate(), require('./api/customer'));
 
-// Residence route
-router.use('/residence', authenticate(), require('./api/residence'));
-
 /**
  * Define a simple health check route. If the server is running
  * we'll respond with a 200 OK.  If not, the server isn't healthy.
@@ -48,7 +45,7 @@ router.get('/', (req, res) => {
       author,
       githubUrl: 'https://github.com/mightycorn/fragments',
       version,
-      hostname: hostname()
+      hostname: hostname(),
     })
   );
 });

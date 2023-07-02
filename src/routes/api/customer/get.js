@@ -1,11 +1,10 @@
-// src/routes/api/get.js
+// src/routes/api/customer/get.js
 
-/**
- * Get a list of fragments for the current user
- */
-module.exports = (req, res) => {
+const { createSuccessResponse } = require('../../../response');
+
+module.exports = async (req, res)  => {
   // TODO: this is just a placeholder to get something working...
-  return res.status(200).json({
-    status: 'ok'
-  });
-};
+  res.status(200).json(
+    createSuccessResponse()
+  );
+}

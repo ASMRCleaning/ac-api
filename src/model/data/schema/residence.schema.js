@@ -51,6 +51,7 @@ const residenceSchema = new Schema({
     province: String,
     country: String
   }, { _id: false })
-});
+},
+{ versionKey: false});
 
 module.exports = residenceSchema;

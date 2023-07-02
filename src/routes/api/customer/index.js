@@ -8,7 +8,10 @@ const router = express.Router();
 // GET /customer
 router.get('/', require('./get'));
 
-// GET /customer/:username
-router.get('/:username', require('./get-info'));
+// PUT /customer/:id
+router.put('/', require('./put'));
+
+// Route chaining for /residence i.e. /customer/residence
+router.use('/residence', require('./residence'));
 
 module.exports = router;
