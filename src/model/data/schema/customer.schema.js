@@ -13,6 +13,7 @@ const customerSchema = new Schema({
     type: String,
     required: true 
   }
-});
+},
+{ versionKey : false });
 
 module.exports = customerSchema;

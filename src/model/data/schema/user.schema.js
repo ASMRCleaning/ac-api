@@ -10,6 +10,7 @@ const userSchema = new Schema({
     type: String,
     enum: [ 'customer', 'manager', 'employee' ]
   }
-});
+},
+{ versionKey: false });
 
 module.exports = userSchema;
