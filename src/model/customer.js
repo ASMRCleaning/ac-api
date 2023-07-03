@@ -4,7 +4,7 @@
 const logger = require('../logger');
 
 // Validate the passed value
-const validate = require('./validate-value');
+const { validateString } = require('./validate-value');
 
 // Query helper functions using Mongoose for CustomerModel
 const { 
@@ -16,14 +16,14 @@ const {
 class Customer {
   constructor({ id, userId, firstName, lastName }) {
     // The _id of the Customer object is MongoDB ObjectID type
-    this._id = id;
+    this._id = id ? id : {};
+    this.userId = userId ? userId : {};
 
     // If a userId, firstName, and lastName 
     // is empty, then do not create a Customer object
     try {
-      this.userId = validate(userId, 'userId');
-      this.firstName = validate(firstName, 'first name');
-      this.lastName = validate(lastName, 'last name');
+      this.firstName = validateString(firstName, 'first name');
+      this.lastName = validateString(lastName, 'last name');
     } catch (err) {
       logger.warn('Customer Class error: missing required value');
       throw new Error(err.message);
@@ -53,8 +53,37 @@ class Customer {
   setData(data) {
     // Assign the values of the properties if it is passed,
     // otherwise, assign the previous value
-    this.firstName = data?.firstName ?? this.firstName;
-    this.lastName = data?.lastName ?? this.lastName;
+    // this.firstName = validateString(data?.firstName, 'firstName') ?? this.firstName;
+    // this.lastName =  validateString(data?.lastName, 'lastName') ?? this.lastName;
+    // this.firstName = data?.firstName ? validateString(data?.firstName) : this.firstName;
+    // this.lastName = data?.lastName ? validateString(data?.lastName) : this.lastName;
+    try {
+      const keys = Object.keys(data);
+
+      keys.forEach(key => {
+        if (key === 'firstName') {
+          this.firstName = validateString(data.firstName, key);
+        }
+  
+        if (key === 'lastName') {
+          this.lastName = validateString(data?.lastName, key);
+        }
+      })
+    } catch (err) {
+      throw new Error(err.message);
+    }
+
+    // for (const property in data) {
+    //   for (let member in this) {
+    //     if (member === property) {
+    //       if (typeof(this[member]) === 'string') {
+    //         this[member] = validateString(data[property], property);
+    //       } else {
+    //         this[member] = validateObject(data[property], property);
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   /**
