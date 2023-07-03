@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 router.post('/', require('./post'));
 
 // PUT /customer/residence/:id
-router.put('/:id', require('./put'));
+router.put('/', require('./put'));
 
 // DELETE /customer/residence/:id
 router.delete('/:id', require('./delete'));
