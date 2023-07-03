@@ -15,6 +15,6 @@ router.post('/', require('./post'));
 router.put('/', require('./put'));
 
 // DELETE /customer/residence/:id
-router.delete('/:id', require('./delete'));
+router.delete('/', require('./delete'));
 
 module.exports = router;
