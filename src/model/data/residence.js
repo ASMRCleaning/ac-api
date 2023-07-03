@@ -83,6 +83,20 @@ const findResidenceById = async (id, customerId) => {
 };
 
 /**
+ * Find a residence with the given customerId
+ * @param {string} customerId 
+ * @returns Promise<Object>
+ */
+const findResidenceByCustomerId = async (customerId) => {
+  try {
+    return await ResidenceModel.findOne({ customerId: customerId }).lean();
+  } catch (err) {
+    logger.warn({ err }, 'readResidence error: ' + err.message);
+    throw new Error(err.message);
+  }
+};
+
+/**
  * Delete the residence from the database with the given id and customerId
  * @param {string} id _id of the residence document
  * @param {string} customerId customerId of the residence document
@@ -104,4 +118,5 @@ module.exports.getAllResidences = getAllResidences;
 module.exports.addResidence = addResidence;
 module.exports.updateResidence = updateResidence;
 module.exports.findResidenceById = findResidenceById;
+module.exports.findResidenceByCustomerId = findResidenceByCustomerId;
 module.exports.deleteResidence = deleteResidence;

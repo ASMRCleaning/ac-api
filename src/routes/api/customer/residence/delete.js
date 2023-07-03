@@ -11,14 +11,13 @@ const { createSuccessResponse, createErrorResponse } = require('../../../../resp
 
 module.exports = async (req, res) => {
   try {
-    const residenceId = req.params.id;
     const customerId = req.user.customerId;
 
-    // Determine whether the residence exists in the database
-    await Residence.byId(residenceId, customerId);
+    // Determine whether the residence exists in the database by the given customerId
+    const residence = await Residence.byCustomerId(customerId);
 
     // Delete the residence in the database
-    await Residence.delete(residenceId, customerId);
+    await Residence.delete(residence._id, customerId);
 
     return res.status(200).json(createSuccessResponse());
   } catch (err) {

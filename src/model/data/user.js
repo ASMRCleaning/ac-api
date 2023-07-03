@@ -4,8 +4,9 @@ const jwt = require('jsonwebtoken');
 const logger = require('../../logger');
 
 const { UserModel, CustomerModel, EmployeeModel, ManagerModel } = require('./connection');
+const { Customer } = require('../customer');
 
-const createUser = async (data, role) => {
+const createUser = async ({ ...data }) => {
   try {
     // Prevent passing _id for MongoDB to automatically create it
     delete data['_id'];
@@ -14,7 +15,7 @@ const createUser = async (data, role) => {
 
     let roleModel;
 
-    switch (role) {
+    switch (data.role) {
       case 'employee':
         roleModel = EmployeeModel;
         break;
@@ -48,15 +49,12 @@ const validateUser = async (username, password) => {
 
       if (match) {
         let payload = {
-          userId: document._id,
-          username: document.username,
-          role: document.role,
+          userId: document._id
         };
 
         // TODO: get the the appropriate ID if the user is a manager/regular employee
         if (document.role === 'customer') {
           const customer = await CustomerModel.findOne({ userId: document._id });
-          logger.info(customer);
           payload['customerId'] = customer._id;
         }
 
@@ -82,6 +80,56 @@ const findByUsername = async (username) => {
   return user;
 };
 
+/**
+ * Find the user and their data by _id and customer/manager/employee id in the database
+ * @param {string} userId user id
+ * @param {string} id customer/manager/employee id
+ * @returns Object
+ */
+const findUserById = async (userId, id) => {
+  try {
+    // Find the user in the database
+    const user = await UserModel.findOne({ _id: userId }).lean();
+
+    if (user) {
+      // TODO: include condition for manager and employee
+
+      // Holder for a customer/manager/employee document
+      let entity;
+
+      // If the found user in the database is a customer return a User object
+      if (user.role === 'customer') {
+        // Find the corresponding customer document in the database
+        entity = await CustomerModel.findOne(
+          { 
+            _id: id, 
+            userId: user._id 
+          }).lean();
+      }
+
+      // Return a formatted data if a customer/manager/employee is found
+      if (entity) {
+        const data = {
+          username: user.username,
+          firstName: entity.firstName,
+          lastName: entity.lastName,
+          role: user.role
+        }
+  
+        return data;
+      }
+    }
+
+    // Return a null if nothing is found
+    return;
+  } catch (err) {
+    // Throw an error if anything goes wrong
+    logger.warn({ err }, 'findUserById error: ' + err.message);
+    throw new Error(err.message);
+  }
+}
+
 module.exports.createUser = createUser;
 module.exports.validateUser = validateUser;
 module.exports.findByUsername = findByUsername;
+module.exports.findUserById = findUserById;
