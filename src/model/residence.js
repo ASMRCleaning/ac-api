@@ -34,12 +34,12 @@ class Residence {
       this.den = validate(data.den, 'den');
       this.frequency = validate(data.frequency, 'frequency');
       this.address = {
-        streetAddress: data.address.streetAddress,
-        unit: data.address.unit,
-        postalCode: data.address.postalCode,
-        city: data.address.city,
-        province: data.address.province,
-        country: data.address.country,
+        streetAddress: data?.address?.streetAddress,
+        unit: data?.address?.unit,
+        postalCode: data?.address?.postalCode,
+        city: data?.address?.city,
+        province: data?.address?.province,
+        country: data?.address?.country,
       };
     } catch (err) {
       // Object is not created if the properties are empty and throw and error

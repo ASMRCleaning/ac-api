@@ -3,7 +3,11 @@ const bcrypt = require('bcrypt');
 const logger = require('../logger');
 const validate = require('./validate-value');
 
-const { createUser, validateUser, findByUsername } = require('./data/user');
+const { 
+  createUser, 
+  validateUser, 
+  findByUsername,
+  findUserById } = require('./data/user');
 
 class User {
   constructor({ ...data }) {
@@ -19,13 +23,17 @@ class User {
       throw new Error(err.message);
     }
 
-    if (data.password === data.password2) {
-      // Generate a hash synchronously using hashSync
-      // See: https://www.npmjs.com/package/bcryptjs#hashsyncs-salt
-      this.password = bcrypt.hashSync(data.password, 10);
+    if (data?.password && data?.password2) {
+      if (data.password === data.password2) {
+        // Generate a hash synchronously using hashSync
+        // See: https://www.npmjs.com/package/bcryptjs#hashsyncs-salt
+        this.password = bcrypt.hashSync(data.password, 10);
+      } else {
+        logger.warn('User Class error [constructor]: passwords do not match');
+        throw new Error('Passwords do not match');
+      }
     } else {
-      logger.warn('User Class error [constructor]: passwords do not match');
-      throw new Error('Passwords do not match');
+      this.password = null;
     }
   }
 
@@ -57,13 +65,33 @@ class User {
     }
   }
 
-  static byRole(role) {
-    // TODO: create query to return user with a specified role
-    return role;
+  /**
+   * Search for the user document in the database by the given userId
+   * @param {string} userId 
+   * @param {string} id 
+   */
+  static async byId(userId, id) {
+    // Find the user
+    const data = await findUserById(userId, id);
+
+    // Throw an error if no user is found
+    if (!data) {
+      logger.warn('User class error [byId]: user not found');
+      throw new Error('User class error [byId]: user not found');
+    }
+
+    // Create a User object
+    const user = new User(data);
+    
+    // Remove the _id and password properties for security
+    delete user['_id'];
+    delete user['password'];
+
+    return user;
   }
 
   register() {
-    return createUser(this, this.role);
+    return createUser(this);
   }
 }
 
