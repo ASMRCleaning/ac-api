@@ -12,6 +12,7 @@ const {
   addResidence,
   updateResidence,
   findResidenceById,
+  findResidenceByCustomerId,
   deleteResidence,
 } = require('../model/data/residence');
 
@@ -34,12 +35,12 @@ class Residence {
       this.den = validate(data.den, 'den');
       this.frequency = validate(data.frequency, 'frequency');
       this.address = {
-        streetAddress: data.address.streetAddress,
-        unit: data.address.unit,
-        postalCode: data.address.postalCode,
-        city: data.address.city,
-        province: data.address.province,
-        country: data.address.country,
+        streetAddress: data?.address?.streetAddress,
+        unit: data?.address?.unit,
+        postalCode: data?.address?.postalCode,
+        city: data?.address?.city,
+        province: data?.address?.province,
+        country: data?.address?.country,
       };
     } catch (err) {
       // Object is not created if the properties are empty and throw and error
@@ -100,7 +101,7 @@ class Residence {
   }
 
   /**
-   * Search for the residence document in the database
+   * Search for the residence document in the database using _id and customerId
    * @param {string} id residence _id
    * @param {string} customerId customer id attached to the residence
    * @returns 
@@ -109,6 +110,18 @@ class Residence {
     const data = await findResidenceById(id, customerId);
 
     // If there is no residence with the id then throw an error
+    if (!data) {
+      logger.warn('Residence class error [byId]: residence with _id and customerId not found');
+      throw new Error('Residence class error [byId]: residence with _id and customerId not found');
+    }
+
+    return new Residence(data);
+  }
+
+  static async byCustomerId(customerId) {
+    const data = await findResidenceByCustomerId(customerId);
+
+    // If there is no residence with a matching customer id then throw an error
     if (!data) {
       logger.warn('Residence class error [byId]: residence with _id and customerId not found');
       throw new Error('Residence class error [byId]: residence with _id and customerId not found');

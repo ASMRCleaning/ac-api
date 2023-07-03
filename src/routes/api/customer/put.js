@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
         createErrorResponse(404, `PUT /customer error: customer with id (${ customerId }) not found`));
     }
   } catch (err) {
-    // If anything goes wrong return 400 response with the proper message
+    // If anything goes wrong return 500 response with the proper message
     logger.warn({ err }, 'PUT /customer error: ' + err.message);
     return res.status(500).json(createErrorResponse(500, err.message));
   }

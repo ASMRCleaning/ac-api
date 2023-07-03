@@ -15,8 +15,6 @@ module.exports.strategy = () => new JwtStrategy(jwtOptions, (jwt_payload, next) 
   if (jwt_payload) {
     let user = {
       userId: jwt_payload.userId,
-      username: jwt_payload.username,
-      role: jwt_payload.role,
     }
 
     if (jwt_payload['customerId']) {
@@ -31,8 +29,7 @@ module.exports.strategy = () => new JwtStrategy(jwtOptions, (jwt_payload, next) 
     }
 
     // The following will ensure that all routes using
-    // passport.authenticate have a req.user.userId, req.user.username, 
-    // req.user.role, and the appropriate user role ID
+    // passport.authenticate have a req.user.userId and user role id
     // that matches the request payload data
     next(null, user);
   } else {
