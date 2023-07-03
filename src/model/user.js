@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt');
 
 const logger = require('../logger');
-const validate = require('./validate-value');
+
+// Validator helper functions
+const { validateString } = require('./validate-value');
 
 const { 
   createUser, 
@@ -14,10 +16,10 @@ class User {
     this._id = data._id;
 
     try {
-      this.username = validate(data.username, 'username');
-      this.firstName = validate(data.firstName, 'first name');
-      this.lastName = validate(data.lastName, 'last name');
-      this.role = validate(data.role, 'role');
+      this.username = validateString(data.username, 'username');
+      this.firstName = validateString(data.firstName, 'first name');
+      this.lastName = validateString(data.lastName, 'last name');
+      this.role = validateString(data.role, 'role');
     } catch (err) {
       logger.warn('User Class error: missing required value');
       throw new Error(err.message);
