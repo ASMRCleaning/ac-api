@@ -3,7 +3,7 @@
 // Logging
 const logger = require('../logger');
 
-// Validate the passed value
+// Validator helper function
 const { validateString } = require('./validate-value');
 
 // Query helper functions using Mongoose for CustomerModel

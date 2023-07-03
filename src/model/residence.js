@@ -3,8 +3,7 @@
 // Logging
 const logger = require('../logger');
 
-// Validate the passed value
-const validate = require('./validate-value');
+// Validator helper functions
 const {
   validateString,
   validateBoolean,
@@ -23,7 +22,6 @@ const {
 
 class Residence {
   constructor({ ...data }) {
-    // The _id of the Residence object is MongoDB ObjectID type
     this._id = data?._id ? data?._id : {};
     this.customerId = data?.customerId ? data?.customerId : {};
 
@@ -39,6 +37,7 @@ class Residence {
       this.den = validateNumber(data.den, 'den');
       this.frequency = validateString(data.frequency, 'frequency');
 
+      // Initially assign empty values for address
       this.address = {
         streetAddress: "",
         unit: "",
@@ -48,6 +47,7 @@ class Residence {
         country: ""
       };
 
+      // If address is passed, assign the values (if any)
       if (data?.address) {
         this.address = {
           streetAddress: data?.address?.streetAddress,
@@ -95,26 +95,7 @@ class Residence {
    * @param {Object} data
    */
   setData({...data }) {
-    // Assign the values of the properties if it is passed,
-    // otherwise, assign the previous value
-    // this.houseType = data?.houseType ?? this.houseType;
-    // this.size = data?.size ?? this.size;
-    // this.empty = data?.empty ?? this.empty;
-    // this.furnished = data?.furnished ?? this.furnished;
-    // this.pet = data?.pet ?? this.pet;
-    // this.bedroom = data?.bedroom ?? this.bedroom;
-    // this.bathroom = data?.bathroom ?? this.bathroom;
-    // this.den = data?.den ?? this.den;
-    // this.frequency = data?.frequency ?? this.frequency;
-    // this.address = {
-    //   streetAddress: data?.address?.streetAddress ?? this.address.streetAddress,
-    //   unit: data?.address?.unit ?? this.address.unit,
-    //   postalCode: data?.address?.postalCode ?? this.address.postalCode,
-    //   city: data?.address?.city ?? this.address.city,
-    //   province: data?.address?.province ?? this.address.province,
-    //   country: data?.address?.country ?? this.address.country,
-    // };
-
+    // Assign the values of the properties if it is passed
     try {
       for (const property in data) {
         for (let member in this) {

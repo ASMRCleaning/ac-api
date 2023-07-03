@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 
 const logger = require('../logger');
+
+// Validator helper functions
 const { validateString } = require('./validate-value');
 
 const { 

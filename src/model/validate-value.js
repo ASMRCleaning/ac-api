@@ -36,18 +36,18 @@ const validateObject = (value, key) => {
   throw new Error(`User Class: value of ${ key } not accepted`);
 }
 
-module.exports = (value, key) => {
-  if (typeof(value) === 'boolean' || typeof(value) === 'number') {
-    return value;
-  }
+// module.exports = (value, key) => {
+//   if (typeof(value) === 'boolean' || typeof(value) === 'number') {
+//     return value;
+//   }
 
-  if (value) {
-    return value;
-  }
+//   if (value) {
+//     return value;
+//   }
 
-  logger.warn(`User Class: a(n) ${ key } value is required`);
-  throw new Error(`a(n) ${ key } value is required`);
-}
+//   logger.warn(`User Class: a(n) ${ key } value is required`);
+//   throw new Error(`a(n) ${ key } value is required`);
+// }
 
 module.exports.validateString = validateString;
 module.exports.validateBoolean = validateBoolean;
