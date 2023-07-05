@@ -3,10 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 // GET /customer/residence
-router.get('/', (req, res) => {
-  // NOTE: This is a temporary solution
-  res.status(200).json({ "status" : "okay" });
-});
+router.get('/', require('./get'));
 
 // POST /customer/residence
 router.post('/', require('./post'));
