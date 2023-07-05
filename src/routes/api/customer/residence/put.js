@@ -32,10 +32,10 @@ module.exports = async (req, res) => {
         })
       );
     } else {
-      // Return a 404 response if there is no residence with the _id and customerId
-      logger.warn('POST /customer/residence/:id error: residence with _id and customerId not found');
+      // Return a 404 response if there is no residence with the customerId
+      logger.warn('POST /customer/residence/:id error: residence with customerId not found');
       return res.status(404).json(
-        createErrorResponse(404, 'POST /customer/residence/:id error: residence with _id and customerId not found'));
+        createErrorResponse(404, 'POST /customer/residence/:id error: residence with customerId not found'));
     }
     
   } catch (err) {
