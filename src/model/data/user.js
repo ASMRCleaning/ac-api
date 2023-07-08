@@ -3,36 +3,45 @@ const jwt = require('jsonwebtoken');
 
 const logger = require('../../logger');
 
-const { UserModel, CustomerModel, EmployeeModel, ManagerModel } = require('./connection');
-const { Customer } = require('../customer');
+const { 
+  UserModel, 
+  CustomerModel, 
+  EmployeeModel } = require('./connection');
 
+/**
+ * Create a user and the corresponding "role" model
+ * @param {object} data new user data
+ */
 const createUser = async ({ ...data }) => {
   try {
     // Prevent passing _id for MongoDB to automatically create it
     delete data['_id'];
+    // Create a User model
     const newUser = new UserModel(data);
+    // Save the new user in the database
     await newUser.save();
 
-    let roleModel;
+    let RoleModel;
 
+    // If the passed role is a customer create a Customer model
+    // and vice versa
     switch (data.role) {
-      case 'employee':
-        roleModel = EmployeeModel;
-        break;
-      case 'manager':
-        roleModel = ManagerModel;
-        break;
       case 'customer':
-        roleModel = CustomerModel;
+        RoleModel = CustomerModel;
+        break;
+      case 'employee':
+        RoleModel = EmployeeModel;
         break;
     }
 
-    const document = await UserModel.findOne({ username: data.username }).lean();
-    const customer = new roleModel({
-      userId: document._id,
+    // const document = await UserModel.findOne({ username: data.username }).lean();
+    const customer = new RoleModel({
+      userId: newUser._id,
       firstName: data.firstName,
       lastName: data.lastName,
     });
+
+    // We do not return anything
     await customer.save();
   } catch (err) {
     logger.warn({ err }, 'createUser Error: ', err.message);
@@ -40,11 +49,19 @@ const createUser = async ({ ...data }) => {
   }
 };
 
+/**
+ * Validate the user and return a signed JWT token
+ * @param {*} username username of the user
+ * @param {*} password password of the user
+ * @returns {string} return the signed JWT token
+ */
 const validateUser = async (username, password) => {
   try {
+    // Find if a user with the username exists
     const document = await UserModel.findOne({ username: username }).lean();
 
     if (document) {
+      
       const match = await bcrypt.compare(password, document.password);
 
       if (match) {
@@ -52,10 +69,14 @@ const validateUser = async (username, password) => {
           userId: document._id
         };
 
-        // TODO: get the the appropriate ID if the user is a manager/regular employee
+        // The payload will contain a customerId if the user is a customer
+        // or an employeeId if the user is an employee
         if (document.role === 'customer') {
           const customer = await CustomerModel.findOne({ userId: document._id });
           payload['customerId'] = customer._id;
+        } else if (document.role === 'employee') {
+          const employee = await EmployeeModel.findOne({ userId: document._id });
+          payload['employeeId'] = employee._id;
         }
 
         return jwt.sign(payload, process.env.JWT_SECRET);
@@ -83,10 +104,10 @@ const findByUsername = async (username) => {
 /**
  * Find the user and their data by _id and customer/manager/employee id in the database
  * @param {string} userId user id
- * @param {string} id customer/manager/employee id
+ * @param {string} roleId customer/manager/employee id
  * @returns Object
  */
-const findUserById = async (userId, id) => {
+const findUserById = async (userId, roleId) => {
   try {
     // Find the user in the database
     const user = await UserModel.findOne({ _id: userId }).lean();
@@ -102,7 +123,7 @@ const findUserById = async (userId, id) => {
         // Find the corresponding customer document in the database
         entity = await CustomerModel.findOne(
           { 
-            _id: id, 
+            _id: roleId, 
             userId: user._id 
           }).lean();
       }

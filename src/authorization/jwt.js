@@ -2,6 +2,7 @@ const passportJWT = require('passport-jwt');
 const JwtStrategy = require('passport-jwt').Strategy;
 const logger = require('../logger');
 const authorize = require('./authorization-middleware');
+const roleAuthenticate = require('./role-middleware');
 
 // Configure JSON Web Token options
 const jwtOptions = {
@@ -38,3 +39,4 @@ module.exports.strategy = () => new JwtStrategy(jwtOptions, (jwt_payload, next) 
 }); 
 
 module.exports.authenticate = () => authorize('jwt');
+module.exports.roleAuthenticate = () => roleAuthenticate();

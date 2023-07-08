@@ -13,7 +13,8 @@ const {
 
 class User {
   constructor({ ...data }) {
-    this._id = data._id;
+    // NOTE: _id is treated as the User ID
+    this._id = data?._id ? data?._id : {};
 
     try {
       this.username = validateString(data.username, 'username');
@@ -68,13 +69,13 @@ class User {
   }
 
   /**
-   * Search for the user document in the database by the given userId
-   * @param {string} userId 
-   * @param {string} id 
+   * Search for the user document in the database by the given User ID and Role ID
+   * @param {string} userId requestor User ID
+   * @param {string} roleId requester Role ID
    */
-  static async byId(userId, id) {
+  static async byId(userId, roleId) {
     // Find the user
-    const data = await findUserById(userId, id);
+    const data = await findUserById(userId, roleId);
 
     // Throw an error if no user is found
     if (!data) {
