@@ -15,7 +15,7 @@ const router = express.Router();
 const { hostname } = require('os');
 
 // Authentication middleware
-const { authenticate } = require('../authorization/jwt');
+const { authenticate, roleAuthenticate } = require('../authorization/jwt');
 
 /**
  * Expose all of our API routes on /v1/* to include an API version.
@@ -29,6 +29,9 @@ router.use('/register', require('./api/register'));
 
 // Customer route
 router.use('/customer', authenticate(), require('./api/customer'));
+
+// Employee route
+router.use('/employee', authenticate(), roleAuthenticate(), require('./api/employee'));
 
 /**
  * Define a simple health check route. If the server is running

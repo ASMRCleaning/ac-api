@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose');
 
-const customerSchema = new Schema({
+const employeeSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     required: true 
@@ -24,4 +24,4 @@ const customerSchema = new Schema({
 },
 { versionKey : false });
 
-module.exports = customerSchema;
+module.exports = employeeSchema;

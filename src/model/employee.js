@@ -1,4 +1,4 @@
-// src/mode/customer.js
+// src/model/employee.js
 
 // Logging
 const logger = require('../logger');
@@ -6,16 +6,17 @@ const logger = require('../logger');
 // Validator helper function
 const { validateString } = require('./validate-value');
 
-// Query helper functions using Mongoose for CustomerModel
+// Query helper functions for using Mongoose for EmployeeModel
 const { 
-  addCustomer, 
-  updateCustomer,
-  findCustomerById 
-} = require('./data/customer');
+  addEmployee, 
+  updateEmployee, 
+  findEmployeeById } = require('./data/employee');
 
-class Customer {
+const { User } = require('./user');
+
+class Employee {
   constructor({ id, userId, firstName, lastName, email, phone }) {
-    // NOTE: the _id is treated as the Customer ID
+    // NOTE: _id is treated as the Employee ID
     this._id = id ? id : {};
     this.userId = userId ? userId : {};
 
@@ -33,19 +34,18 @@ class Customer {
   }
 
   /**
-   * Add the current customer to the database
+   * Add the current employee to the database
    * @returns Promise<void>
    */
   add() {
-    return addCustomer(this);
+    return addEmployee(this);
   }
 
   /**
    * Update the information of the current customer to the database
    * @returns Promise<void>
    */
-  update() {
-    return updateCustomer(this);
+  update() {    return updateEmployee(this);
   }
 
   /**
@@ -56,18 +56,6 @@ class Customer {
     // Assign the values of the properties if it is passed,
     // otherwise, assign the previous value
     try {
-      // const keys = Object.keys(data);
-
-      // keys.forEach(key => {
-      //   if (key === 'firstName') {
-      //     this.firstName = validateString(data.firstName, key);
-      //   }
-  
-      //   if (key === 'lastName') {
-      //     this.lastName = validateString(data?.lastName, key);
-      //   }
-      // });
-      
       for (const value in data) {
         for (let prop in this) {
           if (prop === value) {
@@ -81,31 +69,48 @@ class Customer {
   }
 
   /**
-   * Search for a customer by ID in the database
-   * @param {string} id customer _id
-   * @param {string} userId user id attached to the customer
-   * @returns Promise<Customer>
+   * Search for a employee by ID in the database
+   * @param {string} id employee _id
+   * @param {string} userId user id attached to the employee
+   * @returns Promise<Employee>
    */
   static async byId(id, userId) {
-    const data = await findCustomerById(id, userId);
+    const data = await findEmployeeById(id, userId);
 
-    // If there is no customer with the id then throw an error
+    // If there is no employee with the id then throw an error
     if (!data) {
-      logger.warn('Customer Class class error [byId]: customer with _id and userId not found');
-      throw new Error(`Customer Class class error [byId]: customer with _id and userId not found`)
+      logger.warn('Employee Class class error [byId]: employee with _id and userId not found');
+      throw new Error(`Employee Class class error [byId]: employee with _id and userId not found`)
     }
 
-    const customer = new Customer({
+    const customer = new Employee({
       id: data._id,
       userId: data.userId,
       firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
+      lastName: data.lastName
     });
 
     return customer;
   }
+
+  /**
+   * Determine whether the requestor is a manager or not
+   * @param {string} userId user id of the requestor 
+   * @param {string} roleId role id of the requestor
+   * @returns {boolean}
+   */
+  static async isManager(userId, roleId) {
+    try {
+      // Check whether user exists
+      const user = await User.byId(userId, roleId);
+      
+      // If the user is a manager return true otherwise false
+      return user.role === 'manager' ? true : false;
+    } catch (err) {
+      // Throw an error if anything goes wrong
+      throw new Error(err.message)
+    }
+  }
 }
 
-module.exports.Customer = Customer;
+module.exports.Employee = Employee

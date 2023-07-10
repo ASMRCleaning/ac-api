@@ -47,7 +47,6 @@ const updateCustomer = async (data) => {
 
 const findCustomerById = async (id, userId) => {
   try {
-    // return await CustomerModel.findById(id).lean();
     return await CustomerModel.findOne({_id: id, userId: userId}).lean();
   } catch (err) {
     logger.warn({ err }, 'findById error: ' + err.message);

@@ -29,6 +29,7 @@ const {
 const set = (obj, data) => {
   try {
     for (const property in data) {
+      // TODO: This loop is O(n). Make it better
       for (let member in obj) {
         if (member === property) {
           if (typeof(obj[member]) === 'string') {
@@ -48,9 +49,9 @@ const set = (obj, data) => {
 
 class Residence {
   constructor({ ...data }) {
-    // Assign an empty string is if no id and/or customerId is not passed
-    this._id = data?._id ? data?._id : "";
-    this.customerId = data?.customerId ? data?.customerId : "";
+    // NOTE: _id is treated as the Residence ID
+    this._id = data?._id ? data?._id : {};
+    this.customerId = data?.customerId ? data?.customerId : {};
 
     // Attempt to assign the property values of the object
     try {
