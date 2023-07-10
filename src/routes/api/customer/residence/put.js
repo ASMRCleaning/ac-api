@@ -11,15 +11,14 @@ const { createSuccessResponse, createErrorResponse } = require('../../../../resp
 
 module.exports = async (req, res) => {
   try {
-    const customerId = req.user.customerId;
+    const customerId = req.user.userId;
     const residenceData = req.body;
 
     // Determine whether the residence exists in the database using the customerId
     const residence = await Residence.byCustomerId(customerId);
 
-    // If a residence with the matching _id and customerId is found
-    // in the database update it with the database
-    if (residence) {
+    // Update the residence object if it is not empty
+    if (Object.keys(residence).length !== 0) {
       // Set the residence data
       residence.setData(residenceData);
       // Update the residence data in the database
@@ -32,15 +31,13 @@ module.exports = async (req, res) => {
         })
       );
     } else {
-      // Return a 404 response if there is no residence with the customerId
-      logger.warn('POST /customer/residence/:id error: residence with customerId not found');
-      return res.status(404).json(
-        createErrorResponse(404, 'POST /customer/residence/:id error: residence with customerId not found'));
+      // Return a 204 response if there is no residence with the customerId
+      logger.warn('POST /customer/residence warning: residence with customerId not found');
+      return res.status(204).send();
     }
-    
   } catch (err) {
     // Return a 500 response if anything goes wrong
-    logger.warn({ err }, 'PUT /customer/residence:id error: ' + err.message);
+    logger.warn({ err }, 'PUT /customer/residence error: ' + err.message);
     return res.status(500).json(createErrorResponse(500, err.message));
   }
 };

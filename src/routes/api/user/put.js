@@ -1,10 +1,10 @@
-// src/routes/api/customer/put.js
+// src/routes/api/user/put.js
 
 // Logging
 const logger = require('../../../logger');
 
 // Customer object
-const { Customer } = require('../../../model/customer');
+const { User } = require('../../../model/user');
 
 // Use response template for sending response bodies
 const { createSuccessResponse, createErrorResponse } = require('../../../response');
@@ -12,33 +12,30 @@ const { createSuccessResponse, createErrorResponse } = require('../../../respons
 module.exports = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const customerId = req.user.customerId;
-    const customerData = req.body;
+    const userData = req.body;
 
     // Determine whether the customer exists
-    const customer = await Customer.byId(customerId, userId);
+    const user = await User.byId(userId);
 
-    if (customer) {
+    if (Object.keys(user).length !== 0) {
       // Set the customer data. This is limited to first name and last name
-      customer.setData(customerData);
+      user.setData(userData);
       // Update the customer data in the database 
-      const update = await customer.update();
+      const update = await user.update();
     
       // Return the updated data
       return res.status(200).json(
         createSuccessResponse({  
-          customer: update,
+          user: update,
         })
       );
     } else {
-      // Return a 404 response if there is no customer with the given id
-      logger.warn(`PUT /customer error: customer with id (${ customerId }) not found`);
-      return res.status(404).json(
-        createErrorResponse(404, `PUT /customer error: customer with id (${ customerId }) not found`));
+      logger.warn(`PUT /user warning: user not found`);
+      return res.status(204).send();
     }
   } catch (err) {
     // If anything goes wrong return 500 response with the proper message
-    logger.warn({ err }, 'PUT /customer error: ' + err.message);
+    logger.warn({ err }, 'PUT /user error: ' + err.message);
     return res.status(500).json(createErrorResponse(500, err.message));
   }
 };

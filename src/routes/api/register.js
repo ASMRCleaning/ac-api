@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
     const user = new User(req.body);
     await user.register();
     
-    return res.status(200).json(createSuccessResponse({
+    return res.status(201).json(createSuccessResponse({
       message: 'User created'
     }));
   } catch (err) {

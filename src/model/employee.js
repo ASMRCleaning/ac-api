@@ -87,7 +87,9 @@ class Employee {
       id: data._id,
       userId: data.userId,
       firstName: data.firstName,
-      lastName: data.lastName
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
     });
 
     return customer;

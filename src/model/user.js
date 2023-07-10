@@ -90,19 +90,17 @@ class User {
     // Find the user
     const data = await findUserById(userId);
 
-    // Throw an error if no user is found
-    if (!data) {
-      logger.warn('User class error [byId]: user not found');
-      throw new Error('User class error [byId]: user not found');
+    if (data) {
+      // Create a User object
+      const user = new User(data);
+      
+      // Remove the password property for security
+      delete user['password'];
+
+      return user;
+    } else {
+      return {};
     }
-
-    // Create a User object
-    const user = new User(data);
-    
-    // Remove the password property for security
-    delete user['password'];
-
-    return user;
   }
 }
 

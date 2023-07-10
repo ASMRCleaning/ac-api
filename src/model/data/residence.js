@@ -48,8 +48,7 @@ const updateResidence = async (data) => {
         }, 
         details,
         { 
-          // return the document after it has been updated
-          returnDocument: 'after' 
+          new: true
         }).lean();
     } else {
       // Throw an error if there are any validation errors

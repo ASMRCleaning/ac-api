@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   try {
     // Include the customerId when creating a Residence object
     const residenceData = { 
-      customerId: req.user.customerId, 
+      customerId: req.user.userId, 
       ...req.body 
     };
 
