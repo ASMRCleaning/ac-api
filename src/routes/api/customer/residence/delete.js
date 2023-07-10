@@ -11,20 +11,26 @@ const { createSuccessResponse, createErrorResponse } = require('../../../../resp
 
 module.exports = async (req, res) => {
   try {
-    const customerId = req.user.customerId;
+    const customerId = req.user.userId;
 
-    // Determine whether the residence exists in the database by the given customerId
+    // Look for the residence in the database by the given customerId
     const residence = await Residence.byCustomerId(customerId);
 
-    // Delete the residence in the database
-    await Residence.delete(residence._id, customerId);
+    // If the residence is found then delete it
+    if (Object.keys(residence).length !== 0) {
+      // Delete the residence in the database
+      await Residence.delete(residence._id);
 
-    return res.status(200).json(createSuccessResponse());
+      return res.status(200).json(createSuccessResponse());
+    } else {
+      // Return a 204 response if there is no residence with the customerId
+      logger.warn('DELETE /customer/residence warning: residence with customerId not found');
+      return res.status(204).send();
+    }
   } catch (err) {
-      // Return a 404 response if there is no residence with the _id and customerId
-      // or if anything goes wrong
-      logger.warn('DELETE /customer/residence/:id error: residence with _id and customerId not found');
-      return res.status(404).json(
-        createErrorResponse(404, 'POST /customer/residence/:id error: residence with _id and customerId not found'));
+      // Return a 500 response if anything goes wrong
+      logger.warn('DELETE /customer/residence/:id error: ' + err.message);
+      return res.status(500).json(
+        createErrorResponse(500, 'DELETE /customer/residence/:id error: ' + err.message));
   }
 };

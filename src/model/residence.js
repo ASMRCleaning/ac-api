@@ -102,8 +102,8 @@ class Residence {
    * Delete the residence data for the given _id and customerId
    * @returns Promise<Object>
    */
-  static async delete(id, customerId) {
-    return deleteResidence(id, customerId);
+  static async delete(id) {
+    return deleteResidence(id);
   } 
 
   /**
@@ -131,28 +131,31 @@ class Residence {
    * @param {string} customerId customer id attached to the residence
    * @returns 
    */
-  static async byId(id, customerId) {
-    const data = await findResidenceById(id, customerId);
+  static async byId(id) {
+    const data = await findResidenceById(id);
 
     // If there is no residence with the id then throw an error
     if (!data) {
-      logger.warn('Residence class error [byId]: residence with _id and customerId not found');
-      throw new Error('Residence class error [byId]: residence with _id and customerId not found');
+      logger.warn('Residence class error [byId]: residence with _id not found');
+      throw new Error('Residence class error [byId]: residence with _id not found');
     }
 
     return new Residence(data);
   }
 
+  /**
+   * Find a residence with the given customerId
+   * @param {string} customerId customerId tied to the residence
+   * @returns Residence
+   */
   static async byCustomerId(customerId) {
     const data = await findResidenceByCustomerId(customerId);
-
-    // If there is no residence with a matching customer id then throw an error
-    if (!data) {
-      logger.warn('Residence class error [byId]: residence with _id and customerId not found');
-      throw new Error('Residence class error [byId]: residence with _id and customerId not found');
+    
+    if (data) {
+      return new Residence(data);
+    } else {
+      return {};
     }
-
-    return new Residence(data);
   }
 }
 

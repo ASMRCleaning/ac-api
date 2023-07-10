@@ -9,6 +9,22 @@ const userSchema = new Schema({
   role: {
     type: String,
     enum: [ 'customer', 'manager', 'employee' ],
+  },
+  firstName: {
+    type: String,
+    required: true 
+  },
+  lastName: {
+    type: String,
+    required: true 
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
   }
 },
 { versionKey: false });

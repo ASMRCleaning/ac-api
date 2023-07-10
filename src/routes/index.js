@@ -27,6 +27,9 @@ router.use('/login', require('./api/login'));
 // Register route
 router.use('/register', require('./api/register'));
 
+// User route
+router.use('/user', authenticate(), require('./api/user'));
+
 // Customer route
 router.use('/customer', authenticate(), require('./api/customer'));
 
