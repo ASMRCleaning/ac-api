@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
+  // TODO: This is temporary
   try {
     return res.status(200).json({
       status: 'okay'

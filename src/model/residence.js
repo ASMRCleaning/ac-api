@@ -29,6 +29,7 @@ const {
 const set = (obj, data) => {
   try {
     for (const property in data) {
+      // TODO: This loop is O(n). Make it better
       for (let member in obj) {
         if (member === property) {
           if (typeof(obj[member]) === 'string') {

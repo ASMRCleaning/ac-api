@@ -39,6 +39,8 @@ const createUser = async ({ ...data }) => {
       userId: newUser._id,
       firstName: data.firstName,
       lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
     });
 
     // We do not return anything
@@ -134,7 +136,9 @@ const findUserById = async (userId, roleId) => {
           username: user.username,
           firstName: entity.firstName,
           lastName: entity.lastName,
-          role: user.role
+          email: entity.email,
+          phone: entity.phone,
+          role: user.role,
         }
   
         return data;

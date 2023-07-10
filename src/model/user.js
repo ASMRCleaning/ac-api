@@ -20,6 +20,8 @@ class User {
       this.username = validateString(data.username, 'username');
       this.firstName = validateString(data.firstName, 'first name');
       this.lastName = validateString(data.lastName, 'last name');
+      this.email = validateString(data.email, 'email');
+      this.phone = validateString(data.phone, 'phone');
       this.role = validateString(data.role, 'role');
     } catch (err) {
       logger.warn('User Class error: missing required value');

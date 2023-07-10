@@ -15,7 +15,7 @@ const {
 const { User } = require('./user');
 
 class Employee {
-  constructor({ id, userId, firstName, lastName }) {
+  constructor({ id, userId, firstName, lastName, email, phone }) {
     // NOTE: _id is treated as the Employee ID
     this._id = id ? id : {};
     this.userId = userId ? userId : {};
@@ -25,6 +25,8 @@ class Employee {
     try {
       this.firstName = validateString(firstName, 'first name');
       this.lastName = validateString(lastName, 'last name');
+      this.email = validateString(email, 'email');
+      this.phone = validateString(phone, 'phone');
     } catch (err) {
       logger.warn('Customer Class error: missing required value');
       throw new Error(err.message);
@@ -43,8 +45,7 @@ class Employee {
    * Update the information of the current customer to the database
    * @returns Promise<void>
    */
-  update() {
-    return updateEmployee(this);
+  update() {    return updateEmployee(this);
   }
 
   /**
@@ -55,17 +56,13 @@ class Employee {
     // Assign the values of the properties if it is passed,
     // otherwise, assign the previous value
     try {
-      const keys = Object.keys(data);
-
-      keys.forEach(key => {
-        if (key === 'firstName') {
-          this.firstName = validateString(data.firstName, key);
+      for (const value in data) {
+        for (let prop in this) {
+          if (prop === value) {
+            this[prop] = validateString(data[value], prop);
+          }
         }
-  
-        if (key === 'lastName') {
-          this.lastName = validateString(data?.lastName, key);
-        }
-      })
+      }
     } catch (err) {
       throw new Error(err.message);
     }
