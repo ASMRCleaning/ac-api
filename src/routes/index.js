@@ -27,8 +27,14 @@ router.use('/login', require('./api/login'));
 // Register route
 router.use('/register', require('./api/register'));
 
+// User route
+router.use('/user', authenticate(), require('./api/user'));
+
 // Customer route
-router.use('/customer', authenticate(), require('./api/customer'));
+// router.use('/customer', authenticate(), require('./api/customer'));
+
+// Route chaining for /residence i.e. /customer/residence
+// router.use('/residence', require('./api/residence'));
 
 // Employee route
 router.use('/employee', authenticate(), roleAuthenticate(), require('./api/employee'));

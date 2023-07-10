@@ -17,31 +17,6 @@ const createUser = async ({ ...data }) => {
     const newUser = new UserModel(data);
     // Save the new user in the database
     await newUser.save();
-
-    // let RoleModel;
-
-    // If the passed role is a customer create a Customer model
-    // and vice versa
-    // switch (data.role) {
-    //   case 'customer':
-    //     RoleModel = CustomerModel;
-    //     break;
-    //   case 'employee':
-    //     RoleModel = EmployeeModel;
-    //     break;
-    // }
-
-    // const document = await UserModel.findOne({ username: data.username }).lean();
-    // const customer = new RoleModel({
-    //   userId: newUser._id,
-    //   firstName: data.firstName,
-    //   lastName: data.lastName,
-    //   email: data.email,
-    //   phone: data.phone,
-    // });
-
-    // We do not return anything
-    // await customer.save();
   } catch (err) {
     logger.warn({ err }, 'createUser Error: ', err.message);
     throw new Error(err.message);
@@ -64,20 +39,7 @@ const validateUser = async (username, password) => {
       const match = await bcrypt.compare(password, document.password);
 
       if (match) {
-        const payload = { userId: document._id };
-        // let payload = {
-        //   userId: document._id
-        // };
-
-        // The payload will contain a customerId if the user is a customer
-        // or an employeeId if the user is an employee
-        // if (document.role === 'customer') {
-        //   const customer = await CustomerModel.findOne({ userId: document._id });
-        //   payload['customerId'] = customer._id;
-        // } else if (document.role === 'employee') {
-        //   const employee = await EmployeeModel.findOne({ userId: document._id });
-        //   payload['employeeId'] = employee._id;
-        // }
+        const payload = { userId: document._id, role: document.role };
 
         return jwt.sign(payload, process.env.JWT_SECRET);
       }
@@ -90,17 +52,6 @@ const validateUser = async (username, password) => {
   }
 };
 
-// const findByUsername = async (username) => {
-//   const user = await UserModel.findOne({ username: username }).lean();
-
-//   if (user) {
-//     const customer = await CustomerModel.findOne({ userId: user._id }).lean();
-//     return customer;
-//   }
-
-//   return user;
-// };
-
 /**
  * Find the user and their data by _id and customer/manager/employee id in the database
  * @param {string} userId user id
@@ -111,37 +62,6 @@ const findUserById = async (userId) => {
   try {
     // Find the user in the database
     const user = await UserModel.findById(userId).lean();
-
-    // if (user) {
-      // TODO: include condition for manager and employee
-
-      // Holder for a customer/manager/employee document
-      // let entity;
-
-      // If the found user in the database is a customer return a User object
-      // if (user.role === 'customer') {
-      //   // Find the corresponding customer document in the database
-      //   entity = await CustomerModel.findOne(
-      //     { 
-      //       _id: roleId, 
-      //       userId: user._id 
-      //     }).lean();
-      // }
-
-      // Return a formatted data if a customer/manager/employee is found
-      // if (entity) {
-      //   const data = {
-      //     username: user.username,
-      //     firstName: entity.firstName,
-      //     lastName: entity.lastName,
-      //     email: entity.email,
-      //     phone: entity.phone,
-      //     role: user.role,
-      //   }
-  
-      //   return data;
-      // }
-    // }
 
     return user;
   } catch (err) {
@@ -157,7 +77,7 @@ const updateUser = async (data) => {
     const error = user.validateSync();
 
     if (!error) {
-      return await UserModel.findByIdAndUpdate(data._id, data, { returnDocument: 'after '}).lean();
+      return await UserModel.findByIdAndUpdate(data._id, data, { new: true }).lean();
     }
   } catch (err) {
     logger.warn({ err }, 'updateUser error: ' + err.message);

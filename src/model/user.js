@@ -6,9 +6,9 @@ const logger = require('../logger');
 const { validateString } = require('./validate-value');
 
 const { 
-  createUser, 
-  validateUser, 
-  findByUsername,
+  createUser,
+  updateUser,
+  validateUser,
   findUserById } = require('./data/user');
 
 class User {
@@ -42,6 +42,14 @@ class User {
     }
   }
 
+  register() {
+    return createUser(this);
+  }
+
+  update() {
+    return updateUser(this);
+  }
+
   /**
    *
    * @param {string} username
@@ -57,27 +65,30 @@ class User {
     }
   }
 
-  /**
-   *
-   * @param {string} username
-   */
-  static async byUsername(username) {
-    if (username) {
-      return await findByUsername(username);
-    } else {
-      logger.warn('User Class error [byUsername]: missing username');
-      throw new Error('Missing username');
+  setData(data) {
+    // Assign the values of the properties if it is passed,
+    // otherwise, assign the previous value
+    try {
+      if (!("password" in data) && !("username" in data)) {
+        for (const value in data) {
+          for (let prop in this) {
+            if (prop === value) {
+              this[prop] = validateString(data[value], prop);
+            }
+          }
+        }
+      } else {
+        logger.warn('User Class error [setData]: cannot set username or password');
+        throw new Error('User Class error [setData]: cannot set username or password');
+      }
+    } catch (err) {
+      throw new Error(err.message);
     }
   }
 
-  /**
-   * Search for the user document in the database by the given User ID and Role ID
-   * @param {string} userId requestor User ID
-   * @param {string} roleId requester Role ID
-   */
-  static async byId(userId, roleId) {
+  static async byId(userId) {
     // Find the user
-    const data = await findUserById(userId, roleId);
+    const data = await findUserById(userId);
 
     // Throw an error if no user is found
     if (!data) {
@@ -88,15 +99,10 @@ class User {
     // Create a User object
     const user = new User(data);
     
-    // Remove the _id and password properties for security
-    delete user['_id'];
+    // Remove the password property for security
     delete user['password'];
 
     return user;
-  }
-
-  register() {
-    return createUser(this);
   }
 }
 

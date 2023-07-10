@@ -16,7 +16,6 @@ module.exports.strategy = () => new JwtStrategy(jwtOptions, (jwt_payload, next) 
   if (jwt_payload) {
     const user = {
       userId: jwt_payload.userId,
-      username: jwt_payload.username,
       role: jwt_payload.role,
     };
 
@@ -32,7 +31,7 @@ module.exports.strategy = () => new JwtStrategy(jwtOptions, (jwt_payload, next) 
     // }
 
     // The following will ensure that all routes using
-    // passport.authenticate have a userId, username, and role
+    // passport.authenticate have a userId and role
     next(null, user);
   } else {
     next(null, false);
