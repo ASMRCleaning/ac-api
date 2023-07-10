@@ -13,12 +13,15 @@ const {
 
 class User {
   constructor({ ...data }) {
-    this._id = data._id;
+    // NOTE: _id is treated as the User ID
+    this._id = data?._id ? data?._id : {};
 
     try {
       this.username = validateString(data.username, 'username');
       this.firstName = validateString(data.firstName, 'first name');
       this.lastName = validateString(data.lastName, 'last name');
+      this.email = validateString(data.email, 'email');
+      this.phone = validateString(data.phone, 'phone');
       this.role = validateString(data.role, 'role');
     } catch (err) {
       logger.warn('User Class error: missing required value');
@@ -68,13 +71,13 @@ class User {
   }
 
   /**
-   * Search for the user document in the database by the given userId
-   * @param {string} userId 
-   * @param {string} id 
+   * Search for the user document in the database by the given User ID and Role ID
+   * @param {string} userId requestor User ID
+   * @param {string} roleId requester Role ID
    */
-  static async byId(userId, id) {
+  static async byId(userId, roleId) {
     // Find the user
-    const data = await findUserById(userId, id);
+    const data = await findUserById(userId, roleId);
 
     // Throw an error if no user is found
     if (!data) {
