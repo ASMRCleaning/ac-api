@@ -13,12 +13,13 @@ module.exports = async (req, res) => {
   try {
     const customerId = req.user.userId;
 
-    // Determine whether the residence exists in the database by the given customerId
+    // Look for the residence in the database by the given customerId
     const residence = await Residence.byCustomerId(customerId);
 
+    // If the residence is found then delete it
     if (Object.keys(residence).length !== 0) {
       // Delete the residence in the database
-      await Residence.delete(residence._id, customerId);
+      await Residence.delete(residence._id);
 
       return res.status(200).json(createSuccessResponse());
     } else {

@@ -11,6 +11,11 @@ const getAllResidences = async () => {
   }
 };
 
+/**
+ * Create a residence in the database
+ * @param {Object} data residence data
+ * @returns Promise<Object>
+ */
 const addResidence = async (data) => {
   try {
     // Prevent assigning of _id for MongoDB to automatically create it
@@ -32,24 +37,15 @@ const addResidence = async (data) => {
 const updateResidence = async (data) => {
   try {
     // Extract the _id and customerId while assigning everything else in "details"
-    const { _id, customerId, ...details } = data;
+    const { _id, ...details } = data;
     // Create ResidenceModel to validate values before updating in the database
     const residence = new ResidenceModel(data);
     // Validate values synchronously
     const error = residence.validateSync();
 
-    // If there are no validation errors, attempt to update the residence in the database
     if (!error) {
-      return await ResidenceModel.findOneAndUpdate(
-        { 
-          // Use _id and customerId as the filter
-          _id: _id, 
-          customerId: customerId
-        }, 
-        details,
-        { 
-          new: true
-        }).lean();
+      // If there are no validation errors, attempt to update the residence in the database
+      return await ResidenceModel.findByIdAndUpdate(_id, details, { new: true }).lean();
     } else {
       // Throw an error if there are any validation errors
       logger.warn('updateResidence error: ' + error);
@@ -63,18 +59,13 @@ const updateResidence = async (data) => {
 };
 
 /**
- * Find the residence by _id and customerId in the database
- * @param {string} id 
- * @param {string} customerId 
+ * Find the residence by _id in the database
+ * @param {string} id _id of the residence
  * @returns Promise<Object>
  */
-const findResidenceById = async (id, customerId) => {
+const findResidenceById = async (id) => {
   try {
-    return await ResidenceModel.findOne(
-      { 
-        _id: id, 
-        customerId: customerId 
-      }).lean();
+    return await ResidenceModel.findById(id).lean();
   } catch (err) {
     logger.warn({ err }, 'readResidence error: ' + err.message);
     throw new Error(err.message);
@@ -82,8 +73,8 @@ const findResidenceById = async (id, customerId) => {
 };
 
 /**
- * Find a residence with the given customerId
- * @param {string} customerId 
+ * Find a residence with the given customerId in the database
+ * @param {string} customerId customerId tied to the residence 
  * @returns Promise<Object>
  */
 const findResidenceByCustomerId = async (customerId) => {
@@ -96,17 +87,13 @@ const findResidenceByCustomerId = async (customerId) => {
 };
 
 /**
- * Delete the residence from the database with the given id and customerId
+ * Delete the residence from the database with the given id
  * @param {string} id _id of the residence document
- * @param {string} customerId customerId of the residence document
  * @returns Promise<Object>
  */
-const deleteResidence = async (id, customerId) => {
+const deleteResidence = async (id) => {
   try {
-    return await ResidenceModel.findOneAndDelete({ 
-      _id: id, 
-      customerId: customerId 
-    }).lean();
+    return await ResidenceModel.findByIdAndDelete(id).lean();
   } catch (err) {
     logger.warn({ err }, 'deleteResidence error: ' + err.message);
     throw new Error(err.message);

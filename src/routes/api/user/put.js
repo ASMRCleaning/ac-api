@@ -14,7 +14,8 @@ module.exports = async (req, res) => {
     const userId = req.user.userId;
     const userData = req.body;
 
-    // Determine whether the customer exists
+    // Determine whether the customer exists. This will be an empty object
+    // if no user is found
     const user = await User.byId(userId);
 
     if (Object.keys(user).length !== 0) {
@@ -30,6 +31,7 @@ module.exports = async (req, res) => {
         })
       );
     } else {
+      // Return a 204 if no user is found
       logger.warn(`PUT /user warning: user not found`);
       return res.status(204).send();
     }

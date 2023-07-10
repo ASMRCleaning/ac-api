@@ -102,8 +102,8 @@ class Residence {
    * Delete the residence data for the given _id and customerId
    * @returns Promise<Object>
    */
-  static async delete(id, customerId) {
-    return deleteResidence(id, customerId);
+  static async delete(id) {
+    return deleteResidence(id);
   } 
 
   /**
@@ -143,6 +143,11 @@ class Residence {
     return new Residence(data);
   }
 
+  /**
+   * Find a residence with the given customerId
+   * @param {string} customerId customerId tied to the residence
+   * @returns Residence
+   */
   static async byCustomerId(customerId) {
     const data = await findResidenceByCustomerId(customerId);
     

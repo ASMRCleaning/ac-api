@@ -35,28 +35,32 @@ const validateUser = async (username, password) => {
     const document = await UserModel.findOne({ username: username }).lean();
 
     if (document) {
-      
+      // Compare passwords
       const match = await bcrypt.compare(password, document.password);
 
       if (match) {
+        // Create a payload to be signed
         const payload = { userId: document._id, role: document.role };
 
+        // Sign the payload into a JSON Web Token
         return jwt.sign(payload, process.env.JWT_SECRET);
       }
     } else {
+      // Document will be null if there is no matching user in the database,
+      // return the null
       return document;
     }
   } catch (err) {
+    // Throw an error if anything goes wrong
     logger.warn({ err }, 'validateUser Error: ', err.message);
     throw new Error(err.message);
   }
 };
 
 /**
- * Find the user and their data by _id and customer/manager/employee id in the database
+ * Find the user and their user data by _id in the database
  * @param {string} userId user id
- * @param {string} roleId customer/manager/employee id
- * @returns Object
+ * @returns Promise<Object>
  */
 const findUserById = async (userId) => {
   try {
@@ -71,15 +75,28 @@ const findUserById = async (userId) => {
   }
 }
 
+/**
+ * Update the current user with the passed data
+ * @param {Object} data new user data
+ * @returns Promise<Object>
+ */
 const updateUser = async (data) => {
   try {
+    // Create a MongoDB User model with the passed data
     const user = new UserModel(data);
+    // Validate whether passed data adheres to the schema rules
     const error = user.validateSync();
 
     if (!error) {
+      // If there are no errors update the user in the database
       return await UserModel.findByIdAndUpdate(data._id, data, { new: true }).lean();
+    } else {
+      // If validation fails, throw an error
+      logger.warn('updateUser error: ' + error);
+      throw new Error(error);
     }
   } catch (err) {
+    // Throw an error if anything goes wrong
     logger.warn({ err }, 'updateUser error: ' + err.message);
     throw new Error(err.message);
   }

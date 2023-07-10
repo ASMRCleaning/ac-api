@@ -16,6 +16,8 @@ module.exports = async (req, res)  => {
     // Find the user by the given userId and role id
     const user = await User.byId(userId);
     
+    // Return the found user. This will return an empty User object
+    // if no user is found
     res.status(200).json(
       createSuccessResponse({
         user: user,
