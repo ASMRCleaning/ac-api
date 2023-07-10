@@ -3,10 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const logger = require('../../logger');
 
-const { 
-  UserModel, 
-  CustomerModel, 
-  EmployeeModel } = require('./connection');
+const { UserModel } = require('./connection');
 
 /**
  * Create a user and the corresponding "role" model
@@ -21,30 +18,30 @@ const createUser = async ({ ...data }) => {
     // Save the new user in the database
     await newUser.save();
 
-    let RoleModel;
+    // let RoleModel;
 
     // If the passed role is a customer create a Customer model
     // and vice versa
-    switch (data.role) {
-      case 'customer':
-        RoleModel = CustomerModel;
-        break;
-      case 'employee':
-        RoleModel = EmployeeModel;
-        break;
-    }
+    // switch (data.role) {
+    //   case 'customer':
+    //     RoleModel = CustomerModel;
+    //     break;
+    //   case 'employee':
+    //     RoleModel = EmployeeModel;
+    //     break;
+    // }
 
     // const document = await UserModel.findOne({ username: data.username }).lean();
-    const customer = new RoleModel({
-      userId: newUser._id,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-    });
+    // const customer = new RoleModel({
+    //   userId: newUser._id,
+    //   firstName: data.firstName,
+    //   lastName: data.lastName,
+    //   email: data.email,
+    //   phone: data.phone,
+    // });
 
     // We do not return anything
-    await customer.save();
+    // await customer.save();
   } catch (err) {
     logger.warn({ err }, 'createUser Error: ', err.message);
     throw new Error(err.message);
@@ -67,19 +64,20 @@ const validateUser = async (username, password) => {
       const match = await bcrypt.compare(password, document.password);
 
       if (match) {
-        let payload = {
-          userId: document._id
-        };
+        const payload = { userId: document._id };
+        // let payload = {
+        //   userId: document._id
+        // };
 
         // The payload will contain a customerId if the user is a customer
         // or an employeeId if the user is an employee
-        if (document.role === 'customer') {
-          const customer = await CustomerModel.findOne({ userId: document._id });
-          payload['customerId'] = customer._id;
-        } else if (document.role === 'employee') {
-          const employee = await EmployeeModel.findOne({ userId: document._id });
-          payload['employeeId'] = employee._id;
-        }
+        // if (document.role === 'customer') {
+        //   const customer = await CustomerModel.findOne({ userId: document._id });
+        //   payload['customerId'] = customer._id;
+        // } else if (document.role === 'employee') {
+        //   const employee = await EmployeeModel.findOne({ userId: document._id });
+        //   payload['employeeId'] = employee._id;
+        // }
 
         return jwt.sign(payload, process.env.JWT_SECRET);
       }
@@ -92,16 +90,16 @@ const validateUser = async (username, password) => {
   }
 };
 
-const findByUsername = async (username) => {
-  const user = await UserModel.findOne({ username: username }).lean();
+// const findByUsername = async (username) => {
+//   const user = await UserModel.findOne({ username: username }).lean();
 
-  if (user) {
-    const customer = await CustomerModel.findOne({ userId: user._id }).lean();
-    return customer;
-  }
+//   if (user) {
+//     const customer = await CustomerModel.findOne({ userId: user._id }).lean();
+//     return customer;
+//   }
 
-  return user;
-};
+//   return user;
+// };
 
 /**
  * Find the user and their data by _id and customer/manager/employee id in the database
@@ -109,44 +107,43 @@ const findByUsername = async (username) => {
  * @param {string} roleId customer/manager/employee id
  * @returns Object
  */
-const findUserById = async (userId, roleId) => {
+const findUserById = async (userId) => {
   try {
     // Find the user in the database
-    const user = await UserModel.findOne({ _id: userId }).lean();
+    const user = await UserModel.findById(userId).lean();
 
-    if (user) {
+    // if (user) {
       // TODO: include condition for manager and employee
 
       // Holder for a customer/manager/employee document
-      let entity;
+      // let entity;
 
       // If the found user in the database is a customer return a User object
-      if (user.role === 'customer') {
-        // Find the corresponding customer document in the database
-        entity = await CustomerModel.findOne(
-          { 
-            _id: roleId, 
-            userId: user._id 
-          }).lean();
-      }
+      // if (user.role === 'customer') {
+      //   // Find the corresponding customer document in the database
+      //   entity = await CustomerModel.findOne(
+      //     { 
+      //       _id: roleId, 
+      //       userId: user._id 
+      //     }).lean();
+      // }
 
       // Return a formatted data if a customer/manager/employee is found
-      if (entity) {
-        const data = {
-          username: user.username,
-          firstName: entity.firstName,
-          lastName: entity.lastName,
-          email: entity.email,
-          phone: entity.phone,
-          role: user.role,
-        }
+      // if (entity) {
+      //   const data = {
+      //     username: user.username,
+      //     firstName: entity.firstName,
+      //     lastName: entity.lastName,
+      //     email: entity.email,
+      //     phone: entity.phone,
+      //     role: user.role,
+      //   }
   
-        return data;
-      }
-    }
+      //   return data;
+      // }
+    // }
 
-    // Return a null if nothing is found
-    return;
+    return user;
   } catch (err) {
     // Throw an error if anything goes wrong
     logger.warn({ err }, 'findUserById error: ' + err.message);
@@ -154,7 +151,21 @@ const findUserById = async (userId, roleId) => {
   }
 }
 
+const updateUser = async (data) => {
+  try {
+    const user = new UserModel(data);
+    const error = user.validateSync();
+
+    if (!error) {
+      return await UserModel.findByIdAndUpdate(data._id, data, { returnDocument: 'after '}).lean();
+    }
+  } catch (err) {
+    logger.warn({ err }, 'updateUser error: ' + err.message);
+    throw new Error(err.message);
+  }
+}
+
 module.exports.createUser = createUser;
 module.exports.validateUser = validateUser;
-module.exports.findByUsername = findByUsername;
 module.exports.findUserById = findUserById;
+module.exports.updateUser = updateUser;
