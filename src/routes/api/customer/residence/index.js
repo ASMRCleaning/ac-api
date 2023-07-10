@@ -8,10 +8,10 @@ router.get('/', require('./get'));
 // POST /customer/residence
 router.post('/', require('./post'));
 
-// PUT /customer/residence/:id
+// // PUT /customer/residence
 router.put('/', require('./put'));
 
-// DELETE /customer/residence/:id
+// DELETE /customer/residence
 router.delete('/', require('./delete'));
 
 module.exports = router;

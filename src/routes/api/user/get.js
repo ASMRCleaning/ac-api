@@ -12,15 +12,12 @@ const { createSuccessResponse, createErrorResponse } = require('../../../respons
 module.exports = async (req, res)  => {
   try {
     const userId = req.user.userId;
-    // Get the role id whether it is from a customer, manager, or employee
-    const id = 
-      req.user?.customerId ??
-      req.user?.managerId ??
-      req.user?.employeeId;
   
     // Find the user by the given userId and role id
-    const user = await User.byId(userId, id);
+    const user = await User.byId(userId);
     
+    // Return the found user. This will return an empty User object
+    // if no user is found
     res.status(200).json(
       createSuccessResponse({
         user: user,
@@ -28,7 +25,7 @@ module.exports = async (req, res)  => {
     );
   } catch (err) {
     // Throw a 404 response if no user is found
-    logger.warn({ err }, 'PUT /customer error: ' + err.message);
+    logger.warn({ err }, 'GET /customer error: ' + err.message);
     return res.status(404).json(createErrorResponse(404, err.message));
   }
 }

@@ -6,9 +6,9 @@ const logger = require('../logger');
 const { validateString } = require('./validate-value');
 
 const { 
-  createUser, 
-  validateUser, 
-  findByUsername,
+  createUser,
+  updateUser,
+  validateUser,
   findUserById } = require('./data/user');
 
 class User {
@@ -24,6 +24,7 @@ class User {
       this.phone = validateString(data.phone, 'phone');
       this.role = validateString(data.role, 'role');
     } catch (err) {
+      // Throw an error if validation fails
       logger.warn('User Class error: missing required value');
       throw new Error(err.message);
     }
@@ -34,6 +35,7 @@ class User {
         // See: https://www.npmjs.com/package/bcryptjs#hashsyncs-salt
         this.password = bcrypt.hashSync(data.password, 10);
       } else {
+        // Throw an error if passwords do not match
         logger.warn('User Class error [constructor]: passwords do not match');
         throw new Error('Passwords do not match');
       }
@@ -43,10 +45,26 @@ class User {
   }
 
   /**
-   *
-   * @param {string} username
-   * @param {string} password
-   * @returns {string}
+   * Create/register the current user in the database
+   * @returns Promise<Object>
+   */
+  register() {
+    return createUser(this);
+  }
+
+  /**
+   * Update the current object in the database
+   * @returns Promise<Object>
+   */
+  update() {
+    return updateUser(this);
+  }
+
+  /**
+   * Validate if username and password match
+   * @param {string} username user username
+   * @param {string} password user password
+   * @returns Promise<Object>
    */
   static async validate(username, password) {
     if (username && password) {
@@ -58,45 +76,54 @@ class User {
   }
 
   /**
-   *
-   * @param {string} username
+   * Set the data of the current User object with the passed data
+   * @param {Object} data 
    */
-  static async byUsername(username) {
-    if (username) {
-      return await findByUsername(username);
-    } else {
-      logger.warn('User Class error [byUsername]: missing username');
-      throw new Error('Missing username');
+  setData(data) {
+    // Assign the values of the properties if it is passed,
+    // otherwise, assign the previous value
+    try {
+      // Password, username, and role must not be changed
+      // TODO: create a separate function(s) to change the password and/or username
+      if (!("password" in data) && !("username" in data) && !("role" in data)) {
+        for (const value in data) {
+          for (let prop in this) {
+            if (prop === value) {
+              this[prop] = validateString(data[value], prop);
+            }
+          }
+        }
+      } else {
+        // Throw an error if username and/or password included in the data
+        logger.warn('User Class error [setData]: cannot set username or password');
+        throw new Error('User Class error [setData]: cannot set username or password');
+      }
+    } catch (err) {
+      // Throw the validation error
+      throw new Error(err.message);
     }
   }
 
   /**
-   * Search for the user document in the database by the given User ID and Role ID
-   * @param {string} userId requestor User ID
-   * @param {string} roleId requester Role ID
+   * Find the user by the given userId
+   * @param {string} userId _id of the user in the database
+   * @returns User
    */
-  static async byId(userId, roleId) {
+  static async byId(userId) {
     // Find the user
-    const data = await findUserById(userId, roleId);
+    const data = await findUserById(userId);
 
-    // Throw an error if no user is found
-    if (!data) {
-      logger.warn('User class error [byId]: user not found');
-      throw new Error('User class error [byId]: user not found');
+    if (data) {
+      // Create a User object
+      const user = new User(data);
+      
+      // Remove the password property for security
+      delete user['password'];
+
+      return user;
+    } else {
+      return {};
     }
-
-    // Create a User object
-    const user = new User(data);
-    
-    // Remove the _id and password properties for security
-    delete user['_id'];
-    delete user['password'];
-
-    return user;
-  }
-
-  register() {
-    return createUser(this);
   }
 }
 
