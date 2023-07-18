@@ -7,18 +7,18 @@ afterAll(async () => {
   await mongoose.disconnect();
 });
 
-// describe('GET /:userID', () => {
-//   test('should return the user given the user ID', async () => {
-//     const res = await request(app).get('/user/seneca9092');
+// describe('GET /customer/residence/:customerID', () => {
+//   test('should return the customer given the customer ID', async () => {
+//     const res = await request(app).get('/customer/residence/id');
 //     expect(res.statusCode).toBe(200);
 //     expect(res.body.status).toBe('ok');
 //     expect(res.body.firstName).toBe('Test');
 //   });
 // });
 
-describe('Unauthenticated GET /:userID', () => {
+describe('Unauthenticated GET /customer/residence/:customerID', () => {
   test('should return 401 when unautheticated', async () => {
-    const res = await request(app).get('/user/noone');
+    const res = await request(app).get('/customer/residence/noone');
     expect(res.statusCode).toBe(401);
   });
 });
@@ -30,9 +30,9 @@ describe('Unauthenticated GET /:userID', () => {
 //   });
 // });
 
-// describe('PUT /user/:userID', () => {
-//   test('should update a user', async () => {
-//     const res = await request(app).patch('/user/6331abc9e9ececcc2d449e44').send({
+// describe('PUT /customer/residence/:customerID', () => {
+//   test('should update a customer residence', async () => {
+//     const res = await request(app).patch('/customer/residence/6331abc9e9ececcc2d449e44').send({
 //       username: 'testuser',
 //       firstName: 'testfirst',
 //       lastName: 'testlast',
