@@ -28,16 +28,20 @@ const bookingSchema = new Schema({
     required: true
   },
   specification: String,
-  visit: new Schema({
-    status: {
-      type: String,
-      enum: [ 'in progress', 'completed', 'cancelled', ]
-    },
-    date: {
-      type: Date,
-      required: true
-    }
-  }, { _id: false })
+  visits: {
+    type: [ new Schema({
+      // The "visit" object will have an _id property automatically
+      status: {
+        type: String,
+        enum: [ 'in progress', 'completed', 'cancelled' ]
+      },
+      date: {
+        type: Date,
+        required: true
+      }
+    }) ],
+    default: []
+  }
 },
 { versionKey: false });
 
