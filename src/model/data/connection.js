@@ -20,3 +20,8 @@ module.exports.ResidenceModel = connect(process.env.DB_CONN_STRING).model(
   'residence',
   require('./schema/residence.schema')
 );
+
+module.exports.BookingModel = connect(process.env.DB_CONN_STRING).model(
+  'booking',
+  require('./schema/booking.schema')
+);

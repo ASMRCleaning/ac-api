@@ -25,7 +25,7 @@ class User {
       this.role = validateString(data.role, 'role');
     } catch (err) {
       // Throw an error if validation fails
-      logger.warn('User Class error: missing required value');
+      logger.warn('User Class error [constructor]: ' + err.message);
       throw new Error(err.message);
     }
 

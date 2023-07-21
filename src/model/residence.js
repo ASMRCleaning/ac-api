@@ -75,8 +75,7 @@ class Residence {
         country: data?.address?.country ? data?.address?.country : "",
       };
     } catch (err) {
-      // Object is not created if the properties are empty and throw and error
-      logger.warn('Residence class error [constructor]: missing required value');
+      logger.warn('Residence class error [constructor]: ' + err.message);
       throw new Error(err.message);
     }
   }
