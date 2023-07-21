@@ -59,18 +59,22 @@ class Booking {
     this.specification = data.specification ? data.specification : "";
 
     try {
-      this.visits = {
-        _id: data?.visits?._id ? data?.visits?._id : {},
-        status: validateString(data.visits.status, 'visit status'),
-        date: validateString(data.visits.date, 'visit date'),
-      }
+      // this.visits = {
+      //   _id: data?.visits?._id ? data?.visits?._id : {},
+      //   status: validateString(data?.visits?.status, 'visit status'),
+      //   date: validateString(data?.visits?.date, 'visit date'),
+      // }
 
       if (data?.visits) {
         this.visits = [];
 
-        for (const property in data.visits.length()) {
-          this.visits.push(property);
-        }
+        data.visits.forEach(visit => {
+          for (const detail in visit) {
+            validateString(visit[detail], detail);
+          }
+
+          this.visits.push(visit);
+        });
       } else {
         this.visits = [];
       }
