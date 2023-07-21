@@ -44,6 +44,7 @@ const residenceSchema = new Schema({
     required: true
   },
   address: new Schema({
+    // The "address" object will remove the _id property
     streetAddress: String,
     unit: String,
     postalCode: String,
