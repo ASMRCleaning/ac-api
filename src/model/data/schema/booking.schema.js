@@ -1,10 +1,7 @@
 const { Schema } = require('mongoose');
 
 const bookingSchema = new Schema({
-  employeeId: {
-    type: Schema.Types.ObjectId,
-    required: true 
-  },
+  employeeId: Schema.Types.ObjectId,
   customerId: {
     type: Schema.Types.ObjectId,
     required: true 

@@ -51,7 +51,7 @@ const deleteBooking = async (id) => {
   }
 };
 
-const findBookingById = async (id) => {
+const getBookingById = async (id) => {
   try {
     return await BookingModel.findById(id).lean();
   } catch (err) {
@@ -60,14 +60,23 @@ const findBookingById = async (id) => {
   }
 };
 
-const findBooking = async (data) => {
+const getCustomerBooking = async (customerId) => {
   try {
-    return await BookingModel.findOne({ ...data }).lean();
+    return await BookingModel.findOne({ customerId: customerId }).lean();
   } catch (err) {
-    logger.warn({ err }, 'findBooking error: ' + err.message);
+    logger.warn({ err }, 'getCustomerBooking error: ' + err.message);
     throw new Error(err.message);
   }
-};
+}
+
+const getEmployeeBookings = async (employeeId) => {
+  try {
+    return await BookingModel.find({ employeeId: employeeId }).lean();
+  } catch (err) {
+    logger.warn({ err }, 'getEmployeeBookings error: ' + err.message);
+    throw new Error(err.message);
+  }
+}
 
 const getAllCustomerBookingVisits = async (customerId) => {
   try {
@@ -136,8 +145,9 @@ module.exports.getAllBookings = getAllBookings;
 module.exports.addBooking = addBooking;
 module.exports.updateBooking = updateBooking;
 module.exports.deleteBooking = deleteBooking;
-module.exports.findBookingById = findBookingById;
-module.exports.findBooking = findBooking;
+module.exports.getBookingById = getBookingById;
+module.exports.getCustomerBooking = getCustomerBooking;
+module.exports.getEmployeeBookings = getEmployeeBookings;
 module.exports.getAllCustomerBookingVisits = getAllCustomerBookingVisits;
 module.exports.getCustomerBookingVisitById = getCustomerBookingVisitById;
 module.exports.addVisit = addVisit;
