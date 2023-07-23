@@ -8,4 +8,8 @@ router.get('/all', require('./get-all'));
 
 router.post('/', require('./post'));
 
+router.put('/', require('./put'));
+
+router.put('/:id', require('./put-id'));
+
 module.exports = router;
