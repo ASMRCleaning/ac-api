@@ -39,17 +39,17 @@ const set = (obj, data) => {
   }
 }
 
-const getWeeksBetweenDates = (startDate, endDate) => {
-  // Calculate the difference in milliseconds between the two dates
-  const diffInMs = endDate - startDate;
+// const getWeeksBetweenDates = (startDate, endDate) => {
+//   // Calculate the difference in milliseconds between the two dates
+//   const diffInMs = endDate - startDate;
 
-  // Convert milliseconds to weeks
-  const msInWeek = 1000 * 60 * 60 * 24 * 7;
-  const weeks = diffInMs / msInWeek;
+//   // Convert milliseconds to weeks
+//   const msInWeek = 1000 * 60 * 60 * 24 * 7;
+//   const weeks = diffInMs / msInWeek;
 
-  // Round down to get the whole number of weeks
-  return Math.floor(weeks);
-} 
+//   // Round down to get the whole number of weeks
+//   return Math.floor(weeks);
+// } 
 
 class Booking {
   constructor({ ...data }) {
@@ -78,17 +78,13 @@ class Booking {
 
         data.visits.forEach(visit => {
           for (const detail in visit) {
-            validateString(visit[detail], detail);
+            if (detail !== '_id')
+              validateString(visit[detail], detail);
           }
 
           this.visits.push(visit);
         });
       } else {
-        let obj = {
-            status: "scheduled",
-            date: this.startDate
-        }
-
         this.visits = [{
           status: "scheduled",
           date: this.startDate
@@ -132,6 +128,10 @@ class Booking {
 
   static async getAll() {
     return getAllBookings();
+  }
+
+  getVisit(id) {
+    return this.visits.find(visit => visit._id == id);
   }
 
   add() {

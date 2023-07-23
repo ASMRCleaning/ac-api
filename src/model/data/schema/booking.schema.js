@@ -42,7 +42,7 @@ const bookingSchema = new Schema({
         enum: [ 'scheduled', 'in progress', 'completed', 'cancelled', ]
       },
       date: {
-        type: Date,
+        type: String,
         required: true
       }
     }) ],
