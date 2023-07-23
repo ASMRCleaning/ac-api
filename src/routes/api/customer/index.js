@@ -11,6 +11,6 @@ const router = express.Router();
 // // PUT /customer/:id
 // router.put('/', require('./put'));
 
-router.use('/residence', require('./residence'));
+router.use('/residence', require('../residence'));
 
 module.exports = router;
