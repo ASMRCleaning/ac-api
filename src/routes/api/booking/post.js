@@ -14,11 +14,11 @@ module.exports = async (req, res) => {
     const booking = new Booking(bookingData);
     const document = await booking.add();
 
-
     return res.status(200).json(createSuccessResponse({
       booking: document
     }));
   } catch (err) {
-    return res.status(500).json(createErrorResponse(500, 'Something went wrong'));
+    logger.warn({ err }, 'POST /booking' + err.message);
+    return res.status(500).json(createErrorResponse(500, err.message));
   }
 }

@@ -45,12 +45,13 @@ class Booking {
     this._id = data?._id ? data?._id : null;
     this.employeeId = data?.employeeId ? data?.employeeId : null;
     this.customerId = data?.customerId ? data?.customerId : null;
+    this.residenceId = data?.residenceId ? data?.residenceId : null;
 
     try {
       this.status = validateString(data.status, 'status');
       this.serviceType = validateString(data.serviceType, 'serviceType');
-      this.startDate = validateString(data.startDate, 'startDate');
-      this.endDate = validateString(data.endDate, 'endDate');
+      this.startDate = validateString(new Date(data.startDate).toISOString(), 'startDate');
+      this.endDate = validateString(new Date(data.endDate).toISOString(), 'endDate');
     } catch (err) {
       logger.warn('Booking class error [constructor]: ' + err.message);
       throw new Error(err.message);
@@ -79,7 +80,7 @@ class Booking {
   }
 
   static async getAll() {
-    return getAllBookings;
+    return getAllBookings();
   }
 
   add() {
