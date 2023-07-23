@@ -1,13 +1,13 @@
 // src/routes/api/customer/residence/put.js
 
 // Logging
-const logger = require('../../../../logger');
+const logger = require('../../../logger');
 
 // Residence object
-const { Residence } = require('../../../../model/residence');
+const { Residence } = require('../../../model/residence');
 
 // Use response template for sending response bodies
-const { createSuccessResponse, createErrorResponse } = require('../../../../response');
+const { createSuccessResponse, createErrorResponse } = require('../../../response');
 
 module.exports = async (req, res) => {
   try {
