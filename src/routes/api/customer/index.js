@@ -13,6 +13,4 @@ const router = express.Router();
 
 router.use('/residence', require('../residence'));
 
-router.use('/booking', require('../booking'));
-
 module.exports = router;
