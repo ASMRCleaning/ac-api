@@ -6,6 +6,10 @@ const bookingSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true 
   },
+  residenceId: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
   status: {
     type: String,
     enum: [ 'ongoing', 'cancelled', 'completed' ],
@@ -17,11 +21,11 @@ const bookingSchema = new Schema({
     required: true
   },
   startDate: {
-    type: Date,
+    type: String,
     required: true
   },
   endDate: {
-    type: Date,
+    type: String,
     required: true
   },
   specification: String,
