@@ -138,18 +138,18 @@ class Booking {
   }
 
   setData(data) {
-    const { visits, ...rest } = data;
+    // We do not allow changing of "visit"
+    delete data['visits']
 
     try {
-      set(this, rest);
-      
-      for (const visit in visits) {
-        for (const detail in visits[visit]) {
-          validateString(visits[visit][detail]);
-        }
+      set(this, data);
+      // for (const visit in visits) {
+      //   for (const detail in visits[visit]) {
+      //     validateString(visits[visit][detail]);
+      //   }
 
-        this.visits.push(visit);
-      }
+      //   this.visits.push(visit);
+      // }
     } catch (err) {
       logger.warn(`Booking class error [setData]: ${ err.message }`);
       throw new Error(`Booking class error [setData]: ${ err.message }`);
