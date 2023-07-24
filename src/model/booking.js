@@ -88,7 +88,7 @@ class Booking {
         this.visits = [{
           status: "scheduled",
           date: this.startDate
-      }];
+        }];
 
         if (this.frequency !== 'once') {
           let workingDate = new Date(data.startDate);
@@ -110,11 +110,13 @@ class Booking {
               tmp.setMonth(workingDate.getMonth() + 1);
             }
 
-            this.visits.push({
-              status: "scheduled",
-              date: tmp.toISOString()
-            });
-
+            if (tmp < endDate) {
+              this.visits.push({
+                status: "scheduled",
+                date: tmp.toISOString()
+              });
+            }
+            
             workingDate = new Date(tmp);
           }
         }

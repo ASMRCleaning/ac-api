@@ -2,26 +2,31 @@ const express = require('express');
 
 const router = express.Router();
 
+// GET /booking
 router.get('/', require('./get'));
 
-// PUT /visit/:id update a specific visit
-// PUT /:bookingId/visit/:visitId update a specific booking with a specific visit
-// DELETE /visit/:id delete a specific visit
+// GET /booking/all
+router.get('/all', require('./get-all'));
 
-// router.get('/visit/:id', require('./get-visit-id'));
-
-// router.get('/all', require('./get-all'));
-
+// GET /booking/:id
 router.get('/:id', require('./get-id'));
 
+// POST /booking
 router.post('/', require('./post'));
 
+// POST /booking/:id
+router.post('/:id', require('./post'));
+
+// PUT /booking
 router.put('/', require('./put'));
 
+// PUT /booking/:id
 router.put('/:id', require('./put-id'));
 
+// DELETE /booking
 router.delete('/', require('./delete'));
 
+// DELETE /booking/:id
 router.delete('/:id', require('./delete-id'));
 
 module.exports = router;

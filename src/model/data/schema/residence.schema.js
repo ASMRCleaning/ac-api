@@ -38,11 +38,11 @@ const residenceSchema = new Schema({
     type: Number,
     required: true 
   },
-  frequency: {
-    type: String,
-    enum: [ 'once', 'weekly', 'bi-weekly', 'monthly' ],
-    required: true
-  },
+  // frequency: {
+  //   type: String,
+  //   enum: [ 'once', 'weekly', 'bi-weekly', 'monthly' ],
+  //   required: true
+  // },
   address: new Schema({
     // The "address" object will remove the _id property
     streetAddress: String,
