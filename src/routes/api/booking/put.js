@@ -11,20 +11,31 @@ module.exports = async (req, res) => {
   try {
     const booking = await Booking.byCustomer(req.user.userId);
 
-    if (Object.keys(booking).length !== 0) {
-      try {
+    try {
+      if (!req.query.visitId) {
         booking.setData(req.body);
         const update = await booking.update();
-  
+
         return res.status(200).json(
           createSuccessResponse({
             booking: update
           })
         );
-      } catch (err) {
-        logger.warn({ err }, 'PUT /booking' + err.message);
-        return res.status(400).json(createErrorResponse(400, err.message));
       }
+
+      booking.updateVisit(req.query.visitId, req.body);
+      await booking.update();
+      const visit = booking.getVisit(req.query.visitId);
+
+      return res.status(200).json(
+        createSuccessResponse({
+          visit: visit
+        })
+      );
+
+    } catch (err) {
+      logger.warn({ err }, 'PUT /booking' + err.message);
+      return res.status(500).json(createErrorResponse(500, err.message));
     }
   } catch (err) {
     logger.warn({ err }, 'PUT /booking' + err.message);
