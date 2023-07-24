@@ -11,8 +11,8 @@ module.exports = async (req, res) => {
   try {
     const booking = await Booking.byId(req.params.id);
 
-    if (Object.keys(booking).length !== 0) {
-      try {
+    try {
+      if (!req.query.visitId) {
         booking.setData(req.body);
         const update = await booking.update();
   
@@ -21,10 +21,20 @@ module.exports = async (req, res) => {
             booking: update
           })
         );
-      } catch (err) {
-        logger.warn({ err }, 'PUT /booking' + err.message);
-        return res.status(400).json(createErrorResponse(400, err.message));
       }
+
+      booking.updateVisit(req.query.visitId, req.body);
+      await booking.update();
+      const visit = booking.getVisit(req.query.visitId);
+
+      return res.status(200).json(
+        createSuccessResponse({
+          visit: visit
+        })
+      );
+    } catch (err) {
+      logger.warn({ err }, 'PUT /booking' + err.message);
+      return res.status(400).json(createErrorResponse(400, err.message));
     }
   } catch (err) {
     logger.warn({ err }, 'PUT /booking' + err.message);

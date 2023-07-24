@@ -161,17 +161,15 @@ class Booking {
     }
   }
 
-  updateVisit(data) {
-    const { _id } = data;
-    const index = this.visits.findIndex(visit => visit._id === _id);
+  updateVisit(id, data) {
+    const index = this.visits.findIndex(visit => visit._id == id);
 
     if (index > -1) {
       try {
         for (const property in data) {
           validateString(data[property], property);
+          this.visits[index][property] = data[property]
         }
-
-        this.visits[index] = data;
       } catch (err) {
         logger.warn('Booking class error [addVisit]: ' + err.message);
         throw new Error(err.message);      
