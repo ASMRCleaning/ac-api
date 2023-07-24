@@ -33,6 +33,8 @@ router.use('/user', authenticate(), require('./api/user'));
 // Customer route
 router.use('/customer', authenticate(), require('./api/customer'));
 
+router.use('/residence', authenticate(), require('./api/residence'));
+
 router.use('/booking', authenticate(), require('./api/booking'));
 
 // Employee route

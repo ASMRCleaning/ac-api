@@ -11,6 +11,22 @@ module.exports = async (req, res) => {
   try {
     const booking = await Booking.byId(req.params.id);
 
+    if (req.query.visitId) {
+      const visit = booking.getVisit(req.query.visitId);
+
+      if (!visit) {
+        return res.status(404).json(
+          createErrorResponse('GET /booking/:id error: visitId not found')
+        );
+      }
+
+      return res.status(200).json(
+        createSuccessResponse({
+          visit: visit
+        })
+      );
+    }
+
     return res.status(200).json(
       createSuccessResponse({
         bookings: booking
