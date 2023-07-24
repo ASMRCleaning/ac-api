@@ -31,14 +31,14 @@ router.use('/register', require('./api/register'));
 router.use('/user', authenticate(), require('./api/user'));
 
 // Customer route
-router.use('/customer', authenticate(), require('./api/customer'));
+// router.use('/customer', authenticate(), require('./api/customer'));
 
 router.use('/residence', authenticate(), require('./api/residence'));
 
 router.use('/booking', authenticate(), require('./api/booking'));
 
 // Employee route
-router.use('/employee', authenticate(), roleAuthenticate(), require('./api/employee'));
+// router.use('/employee', authenticate(), roleAuthenticate(), require('./api/employee'));
 
 /**
  * Define a simple health check route. If the server is running
