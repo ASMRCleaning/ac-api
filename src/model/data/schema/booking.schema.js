@@ -20,6 +20,11 @@ const bookingSchema = new Schema({
     enum: [ 'casual', 'deep', 'green' ],
     required: true
   },
+  frequency: {
+    type: String,
+    enum: [ 'once', 'weekly', 'bi-weekly', 'monthly' ],
+    required: true
+  },
   startDate: {
     type: String,
     required: true
@@ -34,10 +39,10 @@ const bookingSchema = new Schema({
       // The "visit" object will have an _id property automatically
       status: {
         type: String,
-        enum: [ 'in progress', 'completed', 'cancelled' ]
+        enum: [ 'scheduled', 'in progress', 'completed', 'cancelled', ]
       },
       date: {
-        type: Date,
+        type: String,
         required: true
       }
     }) ],

@@ -63,7 +63,7 @@ class Residence {
       this.bedroom = validateNumber(data.bedroom, 'bedroom');
       this.bathroom = validateNumber(data.bathroom, 'bathroom');
       this.den = validateNumber(data.den, 'den');
-      this.frequency = validateString(data.frequency, 'frequency');
+      // this.frequency = validateString(data.frequency, 'frequency');
 
       // Assign am empty string if any of the address properties are not passed
       this.address = {

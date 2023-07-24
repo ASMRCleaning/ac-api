@@ -39,6 +39,18 @@ const set = (obj, data) => {
   }
 }
 
+// const getWeeksBetweenDates = (startDate, endDate) => {
+//   // Calculate the difference in milliseconds between the two dates
+//   const diffInMs = endDate - startDate;
+
+//   // Convert milliseconds to weeks
+//   const msInWeek = 1000 * 60 * 60 * 24 * 7;
+//   const weeks = diffInMs / msInWeek;
+
+//   // Round down to get the whole number of weeks
+//   return Math.floor(weeks);
+// } 
+
 class Booking {
   constructor({ ...data }) {
     // NOTE: _id is treated as the Booking ID
@@ -50,6 +62,7 @@ class Booking {
     try {
       this.status = validateString(data.status, 'status');
       this.serviceType = validateString(data.serviceType, 'serviceType');
+      this.frequency = validateString(data.frequency, 'frequency');
       this.startDate = validateString(new Date(data.startDate).toISOString(), 'startDate');
       this.endDate = validateString(new Date(data.endDate).toISOString(), 'endDate');
     } catch (err) {
@@ -65,13 +78,47 @@ class Booking {
 
         data.visits.forEach(visit => {
           for (const detail in visit) {
-            validateString(visit[detail], detail);
+            if (detail !== '_id')
+              validateString(visit[detail], detail);
           }
 
           this.visits.push(visit);
         });
       } else {
-        this.visits = [];
+        this.visits = [{
+          status: "scheduled",
+          date: this.startDate
+      }];
+
+        if (this.frequency !== 'once') {
+          let workingDate = new Date(data.startDate);
+          const endDate = new Date(data.endDate);
+          
+          while (workingDate < endDate) {
+            let tmp = new Date(workingDate);
+
+            if (this.frequency === 'weekly' || this.frequency === 'bi-weekly') {
+              const days = this.frequency === 'weekly' ? 7 : 14;
+              tmp.setDate(workingDate.getDate() + days);
+
+              // if (tmp < endDate) {
+              //   obj['date'] = tmp.toISOString();
+              // } else {
+              //   obj['date'] = endDate.toISOString();
+              // }
+            } else if (this.frequency === 'monthly') {
+              tmp.setMonth(workingDate.getMonth() + 1);
+            }
+
+            this.visits.push({
+              status: "scheduled",
+              date: tmp.toISOString()
+            });
+
+            workingDate = new Date(tmp);
+          }
+        }
+        // const diff = getWeeksBetweenDates(start, end);
       }
     } catch (err) {
       logger.warn('Booking class error [constructor]: ' + err.message);
@@ -81,6 +128,10 @@ class Booking {
 
   static async getAll() {
     return getAllBookings();
+  }
+
+  getVisit(id) {
+    return this.visits.find(visit => visit._id == id);
   }
 
   add() {
