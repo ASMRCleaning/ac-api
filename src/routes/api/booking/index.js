@@ -8,6 +8,9 @@ router.get('/', require('./get'));
 // GET /booking/all
 router.get('/all', require('./get-all'));
 
+// GET /booking/employee/:id
+router.get('/employee', require('./get-by-employee'));
+
 // GET /booking/:id
 router.get('/:id', require('./get-id'));
 

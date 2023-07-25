@@ -2,16 +2,18 @@ const express = require('express');
 
 const router = express.Router();
 
-// GET /customer/residence
+// GET /residence
 router.get('/', require('./get'));
 
-// POST /customer/residence
+// GET /customer/
+
+// POST /residence
 router.post('/', require('./post'));
 
-// // PUT /customer/residence
+// // PUT /residence
 router.put('/', require('./put'));
 
-// DELETE /customer/residence
+// DELETE /residence
 router.delete('/', require('./delete'));
 
 module.exports = router;

@@ -181,7 +181,7 @@ class Booking {
   }
 
   deleteVisit(id) {  
-    const index = this.visits.findIndex(visit => visit._id === id);
+    const index = this.visits.findIndex(visit => visit._id == id);
 
     if (index > -1) {
       this.visits.splice(index, 1);
@@ -229,12 +229,16 @@ class Booking {
     return new Booking(data);
   }
 
-  static async byEmployee(employeeId) {
+  static async byEmployee(employeeId, bookingId) {
     const data = await getEmployeeBookings(employeeId);
 
     if (!data) {
       logger.warn('Booking class error [byEmployee]: booking(s) with employeeId not found');
       throw new Error('Booking class error [byEmployee]: booking(s) with employeeId not found');
+    }
+
+    if (bookingId) {
+      return data.find(visit => visit._id == bookingId);
     }
 
     return data
