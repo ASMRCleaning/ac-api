@@ -11,15 +11,18 @@ module.exports = async (req, res) => {
   try {
     const booking = await Booking.byCustomer(req.user.userId);
 
-    if (Object.keys(booking).length !== 0) {
-      try {
+    try {
+      if (!req.query.visitId) {
         await Booking.delete(booking._id);
-  
-        return res.status(200).json(createSuccessResponse());
-      } catch (err) {
-        logger.warn({ err }, 'DELETE /booking' + err.message);
-        return res.status(500).json(createErrorResponse(500, 'DELETE /booking' + err.message));
+      } else {
+        booking.deleteVisit(req.query.visitId);
+        await booking.update();
       }
+
+      return res.status(200).json(createSuccessResponse());
+    } catch (err) {
+      logger.warn({ err }, 'DELETE /booking' + err.message);
+      return res.status(500).json(createErrorResponse(500, 'DELETE /booking' + err.message));
     }
   } catch (err) {
     logger.warn({ err }, 'PUT /booking' + err.message);

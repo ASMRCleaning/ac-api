@@ -147,13 +147,14 @@ class Residence {
    * @param {string} customerId customerId tied to the residence
    * @returns Residence
    */
-  static async byCustomerId(customerId) {
+  static async byCustomer(customerId) {
     const data = await findResidenceByCustomerId(customerId);
     
     if (data) {
       return new Residence(data);
     } else {
-      return {};
+      logger.warn('Residence class error [byCustomer]: residence with customerId not found');
+      throw new Error('Residence class error [byCustomer]: residence with customerId not found');
     }
   }
 }
