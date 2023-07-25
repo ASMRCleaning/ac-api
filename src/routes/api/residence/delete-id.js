@@ -11,10 +11,8 @@ const { createSuccessResponse, createErrorResponse } = require('../../../respons
 
 module.exports = async (req, res) => {
   try {
-    const customerId = req.user.userId;
-
     // Look for the residence in the database by the given customerId
-    const residence = await Residence.byCustomer(customerId);
+    const residence = await Residence.byId(req.params.id);
 
     // Delete the residence in the database
     await Residence.delete(residence._id);

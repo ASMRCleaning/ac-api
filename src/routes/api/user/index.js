@@ -4,6 +4,8 @@ const router = express.Router();
 
 router.get('/', require('./get'));
 
+router.get('/all', require('./get-all'));
+
 router.put('/', require('./put'));
 
 module.exports = router;

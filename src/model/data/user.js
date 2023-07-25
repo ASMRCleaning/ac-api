@@ -102,7 +102,28 @@ const updateUser = async (data) => {
   }
 }
 
+const getAllUsers = async (role) => {
+  try {
+    const query = role ? { role : role } : null;
+
+    return await UserModel.find(query, { 
+      _id: true,
+      username: true,
+      role: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true
+     }).lean();
+  } catch (err) {
+    // Throw an error if anything goes wrong
+    logger.warn({ err }, 'getAllUser Error: ', err.message);
+    throw new Error(err.message);
+  }
+}
+
 module.exports.createUser = createUser;
 module.exports.validateUser = validateUser;
 module.exports.findUserById = findUserById;
 module.exports.updateUser = updateUser;
+module.exports.getAllUsers = getAllUsers;

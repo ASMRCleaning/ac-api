@@ -11,14 +11,10 @@ const { createSuccessResponse, createErrorResponse } = require('../../../respons
 
 module.exports = async (req, res) => {
   try {
-    const customerId = req.user.userId;
-    const residenceData = req.body;
-
-    // Determine whether the residence exists in the database using the customerId
-    const residence = await Residence.byCustomer(customerId);
+    const residence = await Residence.byId(req.params.id);
 
     // Set the residence data
-    residence.setData(residenceData);
+    residence.setData(req.body);
     // Update the residence data in the database
     const update = await residence.update();
     
