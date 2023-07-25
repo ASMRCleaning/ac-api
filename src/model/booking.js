@@ -128,7 +128,7 @@ class Booking {
     }
   }
 
-  static async getAll() {
+  static getAll() {
     return getAllBookings();
   }
 

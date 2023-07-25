@@ -9,7 +9,9 @@ const {
   createUser,
   updateUser,
   validateUser,
-  findUserById } = require('./data/user');
+  findUserById, 
+  getAllUsers
+} = require('./data/user');
 
 class User {
   constructor({ ...data }) {
@@ -125,6 +127,10 @@ class User {
       logger.warn('User Class error [byId]: cannot find user');
       throw new Error('User Class error [byId]: cannot find user');
     }
+  }
+
+  static async getAll(user) {
+    return getAllUsers(user);
   }
 }
 
