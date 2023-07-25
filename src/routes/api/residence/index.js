@@ -14,7 +14,10 @@ router.get('/customer/:id', require('./get-by-customer'));
 // POST /residence
 router.post('/', require('./post'));
 
-// // PUT /residence
+// POST /residence/:id
+router.post('/customer/:id', require('./post-by-customer'));
+
+// PUT /residence
 router.put('/', require('./put'));
 
 // DELETE /residence

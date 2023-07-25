@@ -122,7 +122,8 @@ class User {
 
       return user;
     } else {
-      return {};
+      logger.warn('User Class error [byId]: cannot find user');
+      throw new Error('User Class error [byId]: cannot find user');
     }
   }
 }

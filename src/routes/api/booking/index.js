@@ -18,7 +18,7 @@ router.get('/:id', require('./get-id'));
 router.post('/', require('./post'));
 
 // POST /booking/:id
-router.post('/:id', require('./post'));
+router.post('/customer/:id', require('./post-by-customer'));
 
 // PUT /booking
 router.put('/', require('./put'));
