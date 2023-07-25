@@ -20,9 +20,13 @@ router.post('/customer/:id', require('./post-by-customer'));
 // PUT /residence
 router.put('/', require('./put'));
 
+// PUT /residence/:id
 router.put('/:id', require('./put-id'));
 
 // DELETE /residence
 router.delete('/', require('./delete'));
+
+// DELETE /residence/:id
+router.delete('/:id', require('./delete-id'));
 
 module.exports = router;
