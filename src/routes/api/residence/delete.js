@@ -14,23 +14,15 @@ module.exports = async (req, res) => {
     const customerId = req.user.userId;
 
     // Look for the residence in the database by the given customerId
-    const residence = await Residence.byCustomerId(customerId);
+    const residence = await Residence.byCustomer(customerId);
 
-    // If the residence is found then delete it
-    if (Object.keys(residence).length !== 0) {
-      // Delete the residence in the database
-      await Residence.delete(residence._id);
+    // Delete the residence in the database
+    await Residence.delete(residence._id);
 
-      return res.status(200).json(createSuccessResponse());
-    } else {
-      // Return a 204 response if there is no residence with the customerId
-      logger.warn('DELETE /customer/residence warning: residence with customerId not found');
-      return res.status(204).send();
-    }
+    return res.status(200).json(createSuccessResponse());
   } catch (err) {
-      // Return a 500 response if anything goes wrong
-      logger.warn('DELETE /customer/residence/:id error: ' + err.message);
-      return res.status(500).json(
-        createErrorResponse(500, 'DELETE /customer/residence/:id error: ' + err.message));
+    logger.warn('DELETE /residence/:id error: ' + err.message);
+    return res.status(404).json(
+      createErrorResponse(404, 'DELETE /residence/:id error: ' + err.message));
   }
 };

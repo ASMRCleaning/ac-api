@@ -1,4 +1,4 @@
-// src/routes/api/customer/residence/get.js
+// src/routes/api/customer/residence/get-id.js
 
 // Logging
 const logger = require('../../../logger');
@@ -11,10 +11,8 @@ const { createSuccessResponse, createErrorResponse } = require('../../../respons
 
 module.exports = async (req, res) => {
   try {
-    const customerId = req.user.userId;
-
     // Find the residence with the matching customerId
-    const residence = await Residence.byCustomer(customerId);
+    const residence = await Residence.byId(req.params.id);
     
     // Return the matching residence. This will return an empty Residence object
     // if no residence is found
