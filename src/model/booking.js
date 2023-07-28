@@ -30,6 +30,8 @@ const set = (obj, data) => {
         if (member === property) {
           if (typeof(obj[member]) === 'string') {
             obj[member] = validateString(data[property], property);
+          } else if (typeof(obj[member]) === 'object') {
+            obj[member] = data[property]
           }
         }
       }
