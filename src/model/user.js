@@ -106,6 +106,17 @@ class User {
     }
   }
 
+  setPassword(password, password2) {
+    if (password && password2) {
+      if (password === password2) {
+        this.password = this.password = bcrypt.hashSync(password, 10);
+      }
+    } else {
+      logger.warn('User Class error [setPassword]: cannot password');
+      throw new Error('User Class error [setData]: cannot password');
+    }
+  }
+
   /**
    * Find the user by the given userId
    * @param {string} userId _id of the user in the database
