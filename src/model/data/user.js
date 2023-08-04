@@ -73,7 +73,7 @@ const findUserById = async (userId) => {
     logger.warn({ err }, 'findUserById error: ' + err.message);
     throw new Error(err.message);
   }
-}
+};
 
 /**
  * Update the current user with the passed data
@@ -100,27 +100,27 @@ const updateUser = async (data) => {
     logger.warn({ err }, 'updateUser error: ' + err.message);
     throw new Error(err.message);
   }
-}
+};
 
 const getAllUsers = async (role) => {
   try {
-    const query = role ? { role : role } : null;
+    const query = role ? { role: role } : null;
 
-    return await UserModel.find(query, { 
+    return await UserModel.find(query, {
       _id: true,
       username: true,
       role: true,
       firstName: true,
       lastName: true,
       email: true,
-      phone: true
-     }).lean();
+      phone: true,
+    }).lean();
   } catch (err) {
     // Throw an error if anything goes wrong
     logger.warn({ err }, 'getAllUser Error: ', err.message);
     throw new Error(err.message);
   }
-}
+};
 
 module.exports.createUser = createUser;
 module.exports.validateUser = validateUser;

@@ -17,15 +17,15 @@ module.exports = async (req, res) => {
     residence.setData(req.body);
     // Update the residence data in the database
     const update = await residence.update();
-    
+
     // Return the updated data
     return res.status(200).json(
       createSuccessResponse({
-        residence: update
+        residence: update,
       })
     );
   } catch (err) {
     logger.warn({ err }, 'PUT /residence error: ' + err.message);
-    return res.status(404).json(createErrorResponse(500, err.message));
+    return res.status(500).json(createErrorResponse(500, err.message));
   }
 };

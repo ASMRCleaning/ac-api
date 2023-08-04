@@ -15,7 +15,7 @@ const router = express.Router();
 const { hostname } = require('os');
 
 // Authentication middleware
-const { authenticate, roleAuthenticate } = require('../authorization/jwt');
+const { authenticate } = require('../authorization/index');
 
 /**
  * Expose all of our API routes on /v1/* to include an API version.
