@@ -5,13 +5,7 @@ const logger = require('../logger');
 // Validator helper functions
 const { validateString } = require('./validate-value');
 
-const { 
-  createUser,
-  updateUser,
-  validateUser,
-  findUserById, 
-  getAllUsers
-} = require('./data/user');
+const { createUser, updateUser, validateUser, findUserById, getAllUsers } = require('./data/user');
 
 class User {
   constructor({ ...data }) {
@@ -79,7 +73,7 @@ class User {
 
   /**
    * Set the data of the current User object with the passed data
-   * @param {Object} data 
+   * @param {Object} data
    */
   setData(data) {
     // Assign the values of the properties if it is passed,
@@ -87,7 +81,7 @@ class User {
     try {
       // Password, username, and role must not be changed
       // TODO: create a separate function(s) to change the password and/or username
-      if (!("password" in data) && !("username" in data) && !("role" in data)) {
+      if (!('password' in data) && !('username' in data) && !('role' in data)) {
         for (const value in data) {
           for (let prop in this) {
             if (prop === value) {
@@ -129,7 +123,7 @@ class User {
     if (data) {
       // Create a User object
       const user = new User(data);
-      
+
       // Remove the password property for security
       delete user['password'];
 
