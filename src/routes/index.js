@@ -53,7 +53,7 @@ router.get('/', (req, res) => {
   res.status(200).json(
     createSuccessResponse({
       author,
-      githubUrl: 'https://github.com/mightycorn/fragments',
+      githubUrl: 'https://github.com/ASMRCleaning/ac-api',
       version,
       hostname: hostname(),
     })
